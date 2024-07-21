@@ -18,7 +18,7 @@ const ButtonBox = styled.button<{
         : props.heightSize
       : "auto"};
   background: var(--bright-blue);
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   color: var(--white);
 `;
 // TYPE
