@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { RouterProvider } from "react-router-dom";
 import { CookiesProvider } from "react-cookie";
+import { isMobile } from "react-device-detect";
 // COMPONENT
 import Routers from "./router/router";
 // STYLE
@@ -15,7 +16,11 @@ const root = ReactDOM.createRoot(
 root.render(
   // <React.StrictMode>
   <CookiesProvider>
-    <RouterProvider router={Routers} />
+    {isMobile ? (
+      <RouterProvider router={Routers} />
+    ) : (
+      <div>앵? 핸드폰이 아니네요?</div>
+    )}
   </CookiesProvider>
   // </React.StrictMode>
 );

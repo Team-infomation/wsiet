@@ -1,11 +1,12 @@
 // MODULE
+import { Suspense } from "react";
 // COMPONENT
-import Footer from "./components/footer";
+import { Layout } from "./components/layout/Layout";
 function App() {
   return (
-    <div className="App">
-      <Footer />
-    </div>
+    <Suspense fallback={<div>로딩중입니다</div>}>
+      <Layout />
+    </Suspense>
   );
 }
 

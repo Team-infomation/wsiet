@@ -1,0 +1,6 @@
+{
+  "option": [
+    { "depth": 1, "option": [{ "value": true }, { "value": false }] },
+    { "depth": 2, "option": [{ "value": true }, { "value": false }] }
+  ]
+}

@@ -1,7 +1,7 @@
 // MODULE
 import styled from "styled-components";
 // STYLED
-const FooterBox = styled.div`
+const FooterSection = styled.div`
   padding: 2rem;
   border-top: 1px solid var(--gray);
   .copylight {
@@ -10,10 +10,10 @@ const FooterBox = styled.div`
 `;
 export const Footer: React.FC = () => {
   return (
-    <FooterBox className="flex flex_jc_c flex_ai_c">
+    <FooterSection className="flex flex_jc_c flex_ai_c">
       <div className="copylight">
         COPYRIGHT ⓒ 2024. Team-infomation. all right reserved.
       </div>
-    </FooterBox>
+    </FooterSection>
   );
 };
