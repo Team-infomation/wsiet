@@ -10,6 +10,7 @@ import { useEffect } from "react";
 // STYLED
 const OptionSection = styled.div`
   margin-top: 2rem;
+  margin-bottom: 3rem;
 `;
 const OptionTitle = styled.p`
   font-size: 1.5rem;
@@ -19,6 +20,7 @@ const RadioButton = styled.div`
   width: 100%;
   margin-top: 1rem;
   input {
+    position: absolute;
     width: 0;
     height: 0;
     overflow: hidden;
@@ -108,7 +110,7 @@ export const Home: React.FC = () => {
           </div>
         </OptionSection>
       )}
-      <Button txt={"뭐먹지?"} width={"100%"} height={3} />
+      <Button txt={"뭐먹지?"} width={"100%"} height={5} />
     </>
   );
 };
