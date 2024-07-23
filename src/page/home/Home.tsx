@@ -1,5 +1,6 @@
 // MODULE
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 // UTIL
 import { setDate } from "../../util/date";
 // STORE
@@ -7,6 +8,8 @@ import { Depth1Store, Depth2Store } from "../../store/commonStore";
 // COMPONENT
 import { Button } from "../../components/common/Button";
 import { useEffect } from "react";
+// JSON
+import Food from "../../json/FoodType.json";
 // STYLED
 const OptionSection = styled.div`
   margin-top: 2rem;
@@ -43,11 +46,22 @@ const RadioButton = styled.div`
 `;
 
 export const Home: React.FC = () => {
+  const navigate = useNavigate();
   // STORE
   const { Option1, setOption1 }: any = Depth1Store();
   const { Option2, setOption2 }: any = Depth2Store();
 
   console.log(setDate(new Date()));
+  // const depth1 = Food.type1;
+  // const depth2 = Food.type2;
+
+  // console.log(depth1, depth2);
+  // const maxNum = Math.floor(depth1.length);
+  // console.log(Math.floor(Math.random() * (maxNum - 1) + 1));
+
+  const handleRouletteFood = () => {
+    navigate("/result", { state: { option1: Option1, option2: Option2 } });
+  };
 
   useEffect(() => {}, [Option1]);
   return (
@@ -110,7 +124,13 @@ export const Home: React.FC = () => {
           </div>
         </OptionSection>
       )}
-      <Button txt={"뭐먹지?"} width={"100%"} height={5} />
+      <div onClick={() => navigate("/result")}>이동하기</div>
+      <Button
+        txt={"뭐먹지?"}
+        width={"100%"}
+        height={5}
+        event={() => handleRouletteFood()}
+      />
     </>
   );
 };

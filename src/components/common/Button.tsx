@@ -26,13 +26,20 @@ type ButtonProps = {
   txt: string;
   width: string | number | null;
   height: string | number | null;
+  event: any;
 };
-export const Button: React.FC<ButtonProps> = ({ txt, width, height }) => {
+export const Button: React.FC<ButtonProps> = ({
+  txt,
+  width,
+  height,
+  event,
+}) => {
   return (
     <ButtonBox
       className="flex flex_jc_c flex_ai_c"
       widthSize={width}
       heightSize={height}
+      onClick={event}
     >
       {txt}
     </ButtonBox>
