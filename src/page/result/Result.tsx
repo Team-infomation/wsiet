@@ -12,7 +12,6 @@ export const Result: React.FC = () => {
   const { FoodType, setFoodType }: any = ResultStore();
 
   const depth1 = FoodJson.type1;
-  const depth2 = FoodJson.type2;
   const maxNum = Math.floor(depth1.length);
 
   const SelectFood = depth1
@@ -21,9 +20,20 @@ export const Result: React.FC = () => {
 
   useEffect(() => {
     const rouellet = Math.floor(Math.random() * (maxNum - 1) + 1);
-    console.log(rouellet);
-    setFoodType(depth1[rouellet].value);
+    if (state.option1 === false) {
+      setFoodType(depth1[rouellet].value);
+    } else {
+    }
   }, []);
+  console.log("state", state);
 
-  return <div>{FoodType}</div>;
+  return (
+    <div>
+      {!state.option1 ? (
+        <>오늘 밥은 {FoodType} 먹는걸로 하시죠!</>
+      ) : (
+        <>오늘 밥은 {FoodType}, 그 중에서</>
+      )}
+    </div>
+  );
 };

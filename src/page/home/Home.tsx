@@ -4,12 +4,10 @@ import { useNavigate } from "react-router-dom";
 // UTIL
 import { setDate } from "../../util/date";
 // STORE
-import { Depth1Store, Depth2Store } from "../../store/commonStore";
+import { Depth1Store, Depth2Store, Depth3Store } from "../../store/commonStore";
 // COMPONENT
 import { Button } from "../../components/common/Button";
 import { useEffect } from "react";
-// JSON
-import Food from "../../json/FoodType.json";
 // STYLED
 const OptionSection = styled.div`
   margin-top: 2rem;
@@ -50,20 +48,15 @@ export const Home: React.FC = () => {
   // STORE
   const { Option1, setOption1 }: any = Depth1Store();
   const { Option2, setOption2 }: any = Depth2Store();
+  const { Option3, setOption3 }: any = Depth3Store();
 
   console.log(setDate(new Date()));
-  // const depth1 = Food.type1;
-  // const depth2 = Food.type2;
-
-  // console.log(depth1, depth2);
-  // const maxNum = Math.floor(depth1.length);
-  // console.log(Math.floor(Math.random() * (maxNum - 1) + 1));
 
   const handleRouletteFood = () => {
     navigate("/result", { state: { option1: Option1, option2: Option2 } });
   };
 
-  useEffect(() => {}, [Option1]);
+  useEffect(() => {}, [Option1, Option2]);
   return (
     <>
       <div>오늘 뭐먹을지 고민할 시간에 랜덤으로 정해버리자!</div>
@@ -124,7 +117,38 @@ export const Home: React.FC = () => {
           </div>
         </OptionSection>
       )}
-      <div onClick={() => navigate("/result")}>이동하기</div>
+      {Option1 && Option2 && (
+        <OptionSection>
+          <OptionTitle>3. 조금 더 세부적으로 메뉴까지 정해줄까?!</OptionTitle>
+          <div className="flex flex_dir_c flex_jc_sb flex_ai_c">
+            <RadioButton className="flex flex_jc_c flex_ai_c">
+              <input
+                type="radio"
+                name="depth3"
+                id="depth3true"
+                defaultChecked
+              />
+              <label
+                htmlFor="depth3true"
+                className="flex flex_jc_c flex_ai_c"
+                onClick={() => setOption3(false)}
+              >
+                그정도까지는 괜찮을듯한데...
+              </label>
+            </RadioButton>
+            <RadioButton className="flex flex_jc_c flex_ai_c">
+              <input type="radio" name="depth3" id="depth3false" />
+              <label
+                htmlFor="depth3false"
+                className="flex flex_jc_c flex_ai_c"
+                onClick={() => setOption3(true)}
+              >
+                매우 좋아!
+              </label>
+            </RadioButton>
+          </div>
+        </OptionSection>
+      )}
       <Button
         txt={"뭐먹지?"}
         width={"100%"}

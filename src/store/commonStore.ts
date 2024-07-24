@@ -7,6 +7,8 @@ interface Props {
   setOption1?: (option: boolean) => void;
   Option2?: boolean;
   setOption2?: (option: boolean) => void;
+  Option3?: boolean;
+  setOption3?: (option: boolean) => void;
 }
 
 export const Depth1Store = create<Props>((set) => ({
@@ -17,4 +19,9 @@ export const Depth1Store = create<Props>((set) => ({
 export const Depth2Store = create<Props>((set) => ({
   Option2: false,
   setOption2: (option: boolean) => set({ Option2: option }),
+}));
+
+export const Depth3Store = create<Props>((set) => ({
+  Option3: false,
+  setOption3: (option: boolean) => set({ Option3: option }),
 }));
