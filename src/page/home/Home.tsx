@@ -119,7 +119,7 @@ export const Home: React.FC = () => {
           </div>
         </OptionSection>
       )}
-      {Option1 && Option2 && (
+      {/* {Option1 && Option2 && (
         <OptionSection>
           <OptionTitle>3. 조금 더 세부적으로 메뉴까지 정해줄까?!</OptionTitle>
           <div className="flex flex_dir_c flex_jc_sb flex_ai_c">
@@ -150,7 +150,7 @@ export const Home: React.FC = () => {
             </RadioButton>
           </div>
         </OptionSection>
-      )}
+      )} */}
       <Button
         txt={"뭐먹지?"}
         width={"100%"}
