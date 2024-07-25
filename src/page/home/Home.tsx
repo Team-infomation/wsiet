@@ -53,7 +53,9 @@ export const Home: React.FC = () => {
   console.log(setDate(new Date()));
 
   const handleRouletteFood = () => {
-    navigate("/result", { state: { option1: Option1, option2: Option2 } });
+    navigate("/result", {
+      state: { option1: Option1, option2: Option2, option3: Option3 },
+    });
   };
 
   useEffect(() => {}, [Option1, Option2]);
@@ -87,7 +89,7 @@ export const Home: React.FC = () => {
       </OptionSection>
       {Option1 && (
         <OptionSection>
-          <OptionTitle>2. 현재 위치 중심으로 식당도 찾아줘?!</OptionTitle>
+          <OptionTitle>2. 어떤 종류의 요리까지 정해줄까?! </OptionTitle>
           <div className="flex flex_dir_c flex_jc_sb flex_ai_c">
             <RadioButton className="flex flex_jc_c flex_ai_c">
               <input

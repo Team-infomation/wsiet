@@ -3,14 +3,31 @@ import create from "zustand";
 
 // TYPE
 interface Props {
-  FoodType: string;
-  setFoodType: (FoodType: string) => void;
-  Depth2FoodType?: string;
-  setDepth2FoodType?: (FoodType: string) => void;
+  FoodType: FoodTypeProps;
+  setFoodType: (FoodType: object) => void;
+  Depth2FoodType?: Depth2FoodTypeProps;
+  setDepth2FoodType?: (FoodType: object) => void;
+  Depth3FoodType?: Depth3FoodTypeProps;
+  setDepth3FoodType?: (FoodType: object) => void;
 }
+type FoodTypeProps = {
+  key?: number;
+  value?: string;
+};
+type Depth2FoodTypeProps = {
+  id?: number;
+  value?: string;
+  menu?: any[];
+};
+type Depth3FoodTypeProps = {
+  id?: number;
+  value?: string;
+};
 export const ResultStore = create<Props>((set) => ({
-  FoodType: "",
-  setFoodType: (foodType: string) => set({ FoodType: foodType }),
-  Depth2FoodType: "",
-  setDepth2FoodType: (foodType: string) => set({ Depth2FoodType: foodType }),
+  FoodType: {},
+  setFoodType: (foodType: object) => set({ FoodType: foodType }),
+  Depth2FoodType: {},
+  setDepth2FoodType: (foodType: object) => set({ Depth2FoodType: foodType }),
+  Depth3FoodType: {},
+  setDepth3FoodType: (foodType: object) => set({ Depth3FoodType: foodType }),
 }));

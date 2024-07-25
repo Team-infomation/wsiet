@@ -1,12 +1,32 @@
 {
-  "americaFood": [
+  "americanFood": [
     {
       "id": 1,
-      "value": "고기"
+      "value": "고기",
+      "menu": [
+        {
+          "id": 1,
+          "value": "텍사스 바베큐"
+        },
+        {
+          "id": 2,
+          "value": "텍사스 바베큐"
+        }
+      ]
     },
     {
       "id": 2,
-      "value": "고기"
+      "value": "빵",
+      "menu": [
+        {
+          "id": 1,
+          "value": "햄버거"
+        },
+        {
+          "id": 2,
+          "value": "텍사스 바베큐"
+        }
+      ]
     }
   ]
 }
