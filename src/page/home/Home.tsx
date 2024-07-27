@@ -1,5 +1,6 @@
 // MODULE
 import styled from "styled-components";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // UTIL
 import { setDate } from "../../util/date";
@@ -7,7 +8,6 @@ import { setDate } from "../../util/date";
 import { Depth1Store, Depth2Store, Depth3Store } from "../../store/commonStore";
 // COMPONENT
 import { Button } from "../../components/common/Button";
-import { useEffect } from "react";
 // STYLED
 const OptionSection = styled.div`
   margin-top: 2rem;

@@ -10,6 +10,10 @@ interface Props {
   Option3?: boolean;
   setOption3?: (option: boolean) => void;
 }
+interface ModalProps {
+  Modal: boolean;
+  setModal: (modalState: boolean) => void;
+}
 
 export const Depth1Store = create<Props>((set) => ({
   Option1: false,
@@ -24,4 +28,9 @@ export const Depth2Store = create<Props>((set) => ({
 export const Depth3Store = create<Props>((set) => ({
   Option3: false,
   setOption3: (option: boolean) => set({ Option3: option }),
+}));
+
+export const ModalStore = create<ModalProps>((set) => ({
+  Modal: false,
+  setModal: (modalState: boolean) => set({ Modal: modalState }),
 }));

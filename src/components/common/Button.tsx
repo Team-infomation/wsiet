@@ -26,7 +26,7 @@ type ButtonProps = {
   txt: string;
   width: string | number | null;
   height: string | number | null;
-  event: any;
+  event?: any;
 };
 export const Button: React.FC<ButtonProps> = ({
   txt,
