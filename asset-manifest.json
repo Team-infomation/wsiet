@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/wsiet/static/css/main.b102a78e.css",
+    "main.js": "/wsiet/static/js/main.82ecb817.js",
+    "static/js/453.93ffe255.chunk.js": "/wsiet/static/js/453.93ffe255.chunk.js",
+    "index.html": "/wsiet/index.html",
+    "main.b102a78e.css.map": "/wsiet/static/css/main.b102a78e.css.map",
+    "main.82ecb817.js.map": "/wsiet/static/js/main.82ecb817.js.map",
+    "453.93ffe255.chunk.js.map": "/wsiet/static/js/453.93ffe255.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b102a78e.css",
+    "static/js/main.82ecb817.js"
+  ]
+}
