@@ -20,6 +20,8 @@ const QuickButton = styled.div`
   border-radius: 50%;
   background: var(--white);
   box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.5);
+  font-size: 2.5rem;
+  font-weight: 900;
 `;
 
 export const Layout: React.FC = () => {
@@ -36,9 +38,11 @@ export const Layout: React.FC = () => {
         <Outlet />
       </Con>
       <QuickButton
-        className="fixed"
+        className="fixed flex flex_jc_c flex_ai_c"
         onClick={() => handleOpenQuickGuide()}
-      ></QuickButton>
+      >
+        ?
+      </QuickButton>
       <Footer />
     </>
   );
