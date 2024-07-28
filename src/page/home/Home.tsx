@@ -75,9 +75,7 @@ export const Home: React.FC = () => {
       console.error(error);
     }
   };
-  useEffect(() => {
-    fetchLocationName(lat, lon);
-  }, [Option1, Option2]);
+  useEffect(() => {}, [Option1, Option2]);
   useEffect(() => {
     if (Option3) {
       if (navigator.geolocation) {
@@ -92,6 +90,7 @@ export const Home: React.FC = () => {
       }
     }
     console.log(lon, lat);
+    fetchLocationName(lat, lon);
   }, [Option3]);
   return (
     <>
