@@ -2,6 +2,8 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+// API
+import { getFoodStoreInfo } from "../../api/FoodStore";
 // STORE
 import { Depth1Store, Depth2Store, Depth3Store } from "../../store/commonStore";
 import { ResultStore } from "../../store/resultStore";
@@ -55,7 +57,6 @@ export const Result: React.FC = () => {
   const rouellet = Math.floor(Math.random() * maxNum);
 
   const getRandomFood = (items: any[]) => {
-    console.log("items", items);
     const maxNum = items.length;
     return items[Math.floor(Math.random() * maxNum)];
   };
@@ -120,8 +121,9 @@ export const Result: React.FC = () => {
       ) : (
         <div>
           {!state.option1 ? (
-            <ResultTitle>
-              오늘 밥은 {FoodType.value} 종류 먹는걸로 하시죠!
+            <ResultTitle className="flex flex_dir_c">
+              <span>오늘 밥은 {FoodType.value}!</span>
+              <span>{FoodType.subText}</span>
             </ResultTitle>
           ) : (
             <ResultTitle className="flex flex_dir_c flex_jc_c flex_ai_c">

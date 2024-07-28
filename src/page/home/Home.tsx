@@ -6,12 +6,19 @@ import { useNavigate } from "react-router-dom";
 import { setDate } from "../../util/date";
 // STORE
 import { Depth1Store, Depth2Store, Depth3Store } from "../../store/commonStore";
+import { LatLonStore } from "../../store/resultStore";
 // COMPONENT
 import { Button } from "../../components/common/Button";
+import { getLocationName } from "../../api/LocationName";
 // STYLED
 const OptionSection = styled.div`
   margin-top: 2rem;
   margin-bottom: 3rem;
+  .alert_message {
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--light-red);
+  }
 `;
 const OptionTitle = styled.p`
   font-size: 1.5rem;
@@ -49,6 +56,7 @@ export const Home: React.FC = () => {
   const { Option1, setOption1 }: any = Depth1Store();
   const { Option2, setOption2 }: any = Depth2Store();
   const { Option3, setOption3 }: any = Depth3Store();
+  const { lat, setLat, lon, setLon }: any = LatLonStore();
 
   console.log(setDate(new Date()));
 
@@ -57,8 +65,34 @@ export const Home: React.FC = () => {
       state: { option1: Option1, option2: Option2, option3: Option3 },
     });
   };
-
-  useEffect(() => {}, [Option1, Option2]);
+  const fetchLocationName = async (lat: number, lon: number) => {
+    try {
+      const response = await fetch(
+        `/.netlify/functions/getLocationName?lat=${lat}&lon=${lon}`
+      );
+      console.log("주소 API", response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchLocationName(lat, lon);
+  }, [Option1, Option2]);
+  useEffect(() => {
+    if (Option3) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          let userLat = position.coords.latitude;
+          let userLon = position.coords.longitude;
+          setLat(userLat);
+          setLon(userLon);
+        });
+      } else {
+        console.log("geolocation을 사용할 수 없어요.");
+      }
+    }
+    console.log(lon, lat);
+  }, [Option3]);
   return (
     <>
       <div>오늘 뭐먹을지 고민할 시간에 랜덤으로 정해버리자!</div>
@@ -119,9 +153,12 @@ export const Home: React.FC = () => {
           </div>
         </OptionSection>
       )}
-      {/* {Option1 && Option2 && (
+      {Option1 && Option2 && (
         <OptionSection>
-          <OptionTitle>3. 조금 더 세부적으로 메뉴까지 정해줄까?!</OptionTitle>
+          <OptionTitle>3. 근처의 식당도 한번 알아봐줄까?!</OptionTitle>
+          <span className="alert_message">
+            ※사용자의 실시간 위치기반 사용동의가 필요합니다.
+          </span>
           <div className="flex flex_dir_c flex_jc_sb flex_ai_c">
             <RadioButton className="flex flex_jc_c flex_ai_c">
               <input
@@ -150,7 +187,7 @@ export const Home: React.FC = () => {
             </RadioButton>
           </div>
         </OptionSection>
-      )} */}
+      )}
       <Button
         txt={"뭐먹지?"}
         width={"100%"}
