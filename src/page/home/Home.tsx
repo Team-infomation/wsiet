@@ -154,10 +154,11 @@ export const Home: React.FC = () => {
       )}
       {Option1 && Option2 && (
         <OptionSection>
-          <OptionTitle>3. 근처의 식당도 한번 알아봐줄까?!</OptionTitle>
+          <OptionTitle>3.(예정) 근처의 식당도 한번 알아봐줄까?!</OptionTitle>
           <span className="alert_message">
             ※사용자의 실시간 위치기반 사용동의가 필요합니다.
           </span>
+          <span>사실 동의만 받고 아직 API 연동 못했습니다...</span>
           <div className="flex flex_dir_c flex_jc_sb flex_ai_c">
             <RadioButton className="flex flex_jc_c flex_ai_c">
               <input

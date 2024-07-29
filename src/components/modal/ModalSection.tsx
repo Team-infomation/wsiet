@@ -82,6 +82,24 @@ export const ModalSection: React.FC = () => {
           </li>
           {/* <li>카카오맵 API를 사용하고싶었지만 일정횟수 이상은 유료인지라...</li> */}
         </ul>
+        <div className="modal_tit flex flex_jc_c flex_ai_c">
+          이런거 왜 만들었는지 따지러 가기
+        </div>
+        <ul>
+          <li>
+            <Link
+              to={"https://github.com/Team-infomation/wsiet"}
+              target="_blank"
+            >
+              Project Repository
+            </Link>
+          </li>
+          <li>
+            <Link to={"https://github.com/kkt9102"} target="_blank">
+              담당자 Github
+            </Link>
+          </li>
+        </ul>
         <Button
           txt={"확인"}
           width={"100%"}
