@@ -2,11 +2,11 @@
 import styled from "styled-components";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 // UTIL
-import { setDate } from "../../util/date";
 // STORE
 import { Depth1Store, Depth2Store, Depth3Store } from "../../store/commonStore";
-import { LatLonStore } from "../../store/resultStore";
+import { LatLonStore, userLocationStore } from "../../store/resultStore";
 // COMPONENT
 import { Button } from "../../components/common/Button";
 import { getLocationName } from "../../api/LocationName";
@@ -49,7 +49,6 @@ const RadioButton = styled.div`
     }
   }
 `;
-
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   // STORE
@@ -57,8 +56,8 @@ export const Home: React.FC = () => {
   const { Option2, setOption2 }: any = Depth2Store();
   const { Option3, setOption3 }: any = Depth3Store();
   const { lat, setLat, lon, setLon }: any = LatLonStore();
-
-  console.log(setDate(new Date()));
+  const { level3, setLevel3, fullLocation, setFullLocation }: any =
+    userLocationStore();
 
   const handleRouletteFood = () => {
     navigate("/result", {
@@ -66,14 +65,19 @@ export const Home: React.FC = () => {
     });
   };
 
-  const test = async () => {
+  const getUserLocation = async () => {
     try {
-      const response = await getLocationName(lon, lat);
+      const response = getLocationName(lon, lat);
       console.log(response);
     } catch (error) {
       console.log(error);
     }
   };
+
+  // useQuery({
+  //   queryKey: ["data"],
+  //   queryFn: () => getLocationName(lon, lat),
+  // });
 
   useEffect(() => {}, [Option1, Option2]);
   useEffect(() => {
@@ -85,11 +89,11 @@ export const Home: React.FC = () => {
           setLat(userLat);
           setLon(userLon);
         });
+        getUserLocation();
       } else {
         console.log("geolocation을 사용할 수 없어요.");
       }
     }
-    // test();
   }, [Option3]);
 
   return (

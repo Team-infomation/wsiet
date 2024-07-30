@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 // API
 import { getFoodStoreInfo } from "../../api/FoodStore";
+// UTIL
+import { setDate } from "../../util/date";
 // STORE
 import { Depth1Store, Depth2Store, Depth3Store } from "../../store/commonStore";
 import { ResultStore } from "../../store/resultStore";
@@ -28,6 +30,7 @@ const ResultTitle = styled.div`
     font-weight: 600;
   }
 `;
+const RestaurantList = styled.ul``;
 // PROPS
 type Depth2Props = {
   id?: number;
@@ -64,7 +67,6 @@ export const Result: React.FC = () => {
 
   const getRandomFood = (items: any[]) => {
     let maxNum = items.length;
-    console.log("depth3", items);
     return items[Math.floor(Math.random() * maxNum)];
   };
 
@@ -119,6 +121,7 @@ export const Result: React.FC = () => {
       setDepth3FoodType(depth3Food);
     }
   }, [FoodType]);
+  console.log("시간", setDate(new Date()));
   return (
     <>
       {!dummyLoad ? (
@@ -128,19 +131,14 @@ export const Result: React.FC = () => {
       ) : (
         <div>
           {!state.option1 ? (
-            <ResultTitle className="flex flex_dir_c">
-              {FoodType.key === 6 ? (
-                <>
-                  <span>오늘 밥은 {FoodType.value}!</span>
-                  <span>{FoodType.subText}</span>
-                </>
-              ) : (
-                <>
-                  <span>오늘 밥은 {FoodType.value}!</span>
-                  <span>{FoodType.subText}</span>
-                </>
-              )}
+            <ResultTitle className="flex flex_dir_c flex_jc_c flex_ai_c">
+              오늘 밥은 {FoodType.value}!<span>{FoodType.subText}</span>
             </ResultTitle>
+          ) : FoodType.key === 6 ? (
+            <>
+              <span>오늘 밥은 {FoodType.value}!</span>
+              <span>{FoodType.subText}</span>
+            </>
           ) : (
             <ResultTitle className="flex flex_dir_c flex_jc_c flex_ai_c">
               오늘 밥은 {FoodType.value}!
@@ -148,13 +146,27 @@ export const Result: React.FC = () => {
               {state.option2 && <div>그중에서 {Depth3FoodType.value}!</div>}
             </ResultTitle>
           )}
-          {state.option3 && "aaa"}
+
           <Button
             txt={"다시 뽑기?"}
             width={"100%"}
             height={5}
             event={() => handleRestart()}
           />
+
+          {state.option3 && (
+            <div>
+              <div>
+                현재 사용자 위치 기준으로 반경 5km 이내에 있는 식당 목록입니다!
+              </div>
+              <div>현재 사용자 위치 : </div>
+              <div>
+                식당 목록은 경기데이터드림의 안심식당정보 목록을 사용하고
+                있습니다.
+              </div>
+              <RestaurantList></RestaurantList>
+            </div>
+          )}
         </div>
       )}
     </>
