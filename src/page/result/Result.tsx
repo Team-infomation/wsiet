@@ -15,6 +15,7 @@ import KoreanFood from "../../json/Korean.json";
 import AmericanFood from "../../json/America.json";
 import ChinaFood from "../../json/China.json";
 import JapanFood from "../../json/Japan.json";
+import AsianFood from "../../json/Asia.json";
 // STYLED
 const DummyLoadFrame = styled.div``;
 const ResultTitle = styled.div`
@@ -56,8 +57,14 @@ export const Result: React.FC = () => {
   const maxNum = depth1.length;
   const rouellet = Math.floor(Math.random() * maxNum);
 
+  const getRandomFoodType = (items: any[]) => {
+    let maxNum = items.length;
+    return items[Math.floor(Math.random() * maxNum)];
+  };
+
   const getRandomFood = (items: any[]) => {
-    const maxNum = items.length;
+    let maxNum = items.length;
+    console.log("depth3", items);
     return items[Math.floor(Math.random() * maxNum)];
   };
 
@@ -71,7 +78,7 @@ export const Result: React.FC = () => {
   useLayoutEffect(() => {
     setTimeout(() => {
       setDummyLoad(true);
-    }, 3000);
+    }, 0);
   }, []);
   useEffect(() => {
     const selectedFoodType = depth1[rouellet];
@@ -82,29 +89,29 @@ export const Result: React.FC = () => {
       setDepth2Id(Depth2FoodType.id);
 
       if (selectedFoodType.key === 1) {
-        depth2FoodType = getRandomFood(KoreanFood.koreanFood);
+        depth2FoodType = getRandomFoodType(KoreanFood.koreanFood);
         if (state.option2) {
-          depth3Food = getRandomFood(KoreanFood.koreanFood[depth2Id].menu);
+          depth3Food = getRandomFood(depth2FoodType.menu);
         }
       } else if (selectedFoodType.key === 2) {
-        depth2FoodType = getRandomFood(AmericanFood.americanFood);
+        depth2FoodType = getRandomFoodType(AmericanFood.americanFood);
         if (state.option2) {
-          depth3Food = getRandomFood(AmericanFood.americanFood[depth2Id].menu);
+          depth3Food = getRandomFood(depth2FoodType.menu);
         }
       } else if (selectedFoodType.key === 3) {
-        depth2FoodType = getRandomFood(AmericanFood.americanFood);
+        depth2FoodType = getRandomFoodType(AsianFood.asiaFood);
         if (state.option2) {
-          depth3Food = getRandomFood(AmericanFood.americanFood[depth2Id].menu);
+          depth3Food = getRandomFood(depth2FoodType.menu);
         }
       } else if (selectedFoodType.key === 4) {
-        depth2FoodType = getRandomFood(ChinaFood.chinaFood);
+        depth2FoodType = getRandomFoodType(ChinaFood.chinaFood);
         if (state.option2) {
-          depth3Food = getRandomFood(ChinaFood.chinaFood[depth2Id].menu);
+          depth3Food = getRandomFood(depth2FoodType.menu);
         }
       } else if (selectedFoodType.key === 5) {
-        depth2FoodType = getRandomFood(JapanFood.japanFood);
+        depth2FoodType = getRandomFoodType(JapanFood.japanFood);
         if (state.option2) {
-          depth3Food = getRandomFood(JapanFood.japanFood[depth2Id].menu);
+          depth3Food = getRandomFood(depth2FoodType.menu);
         }
       }
 
@@ -122,8 +129,17 @@ export const Result: React.FC = () => {
         <div>
           {!state.option1 ? (
             <ResultTitle className="flex flex_dir_c">
-              <span>오늘 밥은 {FoodType.value}!</span>
-              <span>{FoodType.subText}</span>
+              {FoodType.key === 6 ? (
+                <>
+                  <span>오늘 밥은 {FoodType.value}!</span>
+                  <span>{FoodType.subText}</span>
+                </>
+              ) : (
+                <>
+                  <span>오늘 밥은 {FoodType.value}!</span>
+                  <span>{FoodType.subText}</span>
+                </>
+              )}
             </ResultTitle>
           ) : (
             <ResultTitle className="flex flex_dir_c flex_jc_c flex_ai_c">

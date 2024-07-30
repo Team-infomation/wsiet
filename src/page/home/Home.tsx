@@ -65,16 +65,16 @@ export const Home: React.FC = () => {
       state: { option1: Option1, option2: Option2, option3: Option3 },
     });
   };
-  const fetchLocationName = async (lat: number, lon: number) => {
+
+  const test = async () => {
     try {
-      const response = await fetch(
-        `/.netlify/functions/getLocationName?lat=${lat}&lon=${lon}`
-      );
-      console.log("주소 API", response);
+      const response = await getLocationName(lon, lat);
+      console.log(response);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
+
   useEffect(() => {}, [Option1, Option2]);
   useEffect(() => {
     if (Option3) {
@@ -90,8 +90,10 @@ export const Home: React.FC = () => {
       }
     }
     console.log(lon, lat);
-    fetchLocationName(lat, lon);
+    test();
   }, [Option3]);
+  console.log("a", process.env.NODE_ENV);
+
   return (
     <>
       <div>오늘 뭐먹을지 고민할 시간에 랜덤으로 정해버리자!</div>
