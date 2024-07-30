@@ -148,6 +148,7 @@ export const Result: React.FC = () => {
               {state.option2 && <div>그중에서 {Depth3FoodType.value}!</div>}
             </ResultTitle>
           )}
+          {state.option3 && "aaa"}
           <Button
             txt={"다시 뽑기?"}
             width={"100%"}

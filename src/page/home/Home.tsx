@@ -89,10 +89,8 @@ export const Home: React.FC = () => {
         console.log("geolocation을 사용할 수 없어요.");
       }
     }
-    console.log(lon, lat);
-    test();
+    // test();
   }, [Option3]);
-  console.log("a", process.env.NODE_ENV);
 
   return (
     <>
