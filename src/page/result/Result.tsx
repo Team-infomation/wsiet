@@ -8,7 +8,7 @@ import { getFoodStoreInfo } from "../../api/FoodStore";
 import { setDate } from "../../util/date";
 // STORE
 import { Depth1Store, Depth2Store, Depth3Store } from "../../store/commonStore";
-import { ResultStore } from "../../store/resultStore";
+import { ResultStore, userLocationStore } from "../../store/resultStore";
 // COMPONENT
 import { Button } from "../../components/common/Button";
 // JSON
@@ -28,6 +28,18 @@ const ResultTitle = styled.div`
   > div {
     font-size: 1.8rem;
     font-weight: 600;
+  }
+`;
+const RestaurantSection = styled.div`
+  .point_txt {
+    padding: 1.5rem;
+    color: var(--bright-blue);
+    li {
+      margin-bottom: 0.8rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      word-break: keep-all;
+    }
   }
 `;
 const RestaurantList = styled.ul``;
@@ -52,6 +64,7 @@ export const Result: React.FC = () => {
   const { setOption1 }: any = Depth1Store();
   const { setOption2 }: any = Depth2Store();
   const { setOption3 }: any = Depth3Store();
+  const { level3, fullLocation }: any = userLocationStore();
 
   const [dummyLoad, setDummyLoad] = useState<boolean>(false);
   const [depth2Id, setDepth2Id] = useState<number>(0);
@@ -81,6 +94,7 @@ export const Result: React.FC = () => {
     setTimeout(() => {
       setDummyLoad(true);
     }, 0);
+    // getFoodStoreInfo();
   }, []);
   useEffect(() => {
     const selectedFoodType = depth1[rouellet];
@@ -155,17 +169,23 @@ export const Result: React.FC = () => {
           />
 
           {state.option3 && (
-            <div>
-              <div>
-                현재 사용자 위치 기준으로 반경 5km 이내에 있는 식당 목록입니다!
+            <RestaurantSection>
+              <ul className="point_txt">
+                <li>
+                  현재 사용자 위치 기준으로 반경 5km 이내에 있는 식당
+                  목록입니다!
+                </li>
+                <li>
+                  식당 목록은 경기데이터드림의 안심식당정보 목록을 사용하고
+                  있습니다.
+                </li>
+              </ul>
+              <div className="user_location">
+                사용자의 위치 : <span>{level3}</span>
               </div>
-              <div>현재 사용자 위치 : </div>
-              <div>
-                식당 목록은 경기데이터드림의 안심식당정보 목록을 사용하고
-                있습니다.
-              </div>
+
               <RestaurantList></RestaurantList>
-            </div>
+            </RestaurantSection>
           )}
         </div>
       )}

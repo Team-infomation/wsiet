@@ -1,14 +1,15 @@
 import axios from "../util/instance";
 
-export const getLocationName = (lat: number, lon: number) => {
-  axios
-    .get(`vworld/locationName?lat=${lat}&lon=${lon}`, {
-      headers: {},
-    })
-    .then((response) => {
-      console.log("주소 API", response);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+export const getLocationName: any = (lat: number, lon: number) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`vworld/locationName?lat=${lat}&lon=${lon}`, { headers: {} })
+      .then((response) => {
+        console.log("작동");
+        resolve(response);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 };

@@ -59,25 +59,21 @@ export const Home: React.FC = () => {
   const { level3, setLevel3, fullLocation, setFullLocation }: any =
     userLocationStore();
 
+  const { data, isLoading } = useQuery({
+    queryKey: ["location", lon, lat],
+    queryFn: () =>
+      getLocationName(lon, lat)
+        .then((response: any) => response)
+        .catch((error: any) => error),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+
   const handleRouletteFood = () => {
     navigate("/result", {
       state: { option1: Option1, option2: Option2, option3: Option3 },
     });
   };
-
-  const getUserLocation = async () => {
-    try {
-      const response = getLocationName(lon, lat);
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // useQuery({
-  //   queryKey: ["data"],
-  //   queryFn: () => getLocationName(lon, lat),
-  // });
 
   useEffect(() => {}, [Option1, Option2]);
   useEffect(() => {
@@ -89,13 +85,15 @@ export const Home: React.FC = () => {
           setLat(userLat);
           setLon(userLon);
         });
-        getUserLocation();
+        // if (!isLoading && data.data.response.status == "OK") {
+        //   setLevel3(data.data.response.result[0].structure.level3);
+        //   setFullLocation(data.data.response.result[0].text);
+        // }
       } else {
         console.log("geolocation을 사용할 수 없어요.");
       }
     }
-  }, [Option3]);
-
+  }, [Option3, isLoading]);
   return (
     <>
       <div>오늘 뭐먹을지 고민할 시간에 랜덤으로 정해버리자!</div>
