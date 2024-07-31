@@ -42,3 +42,17 @@
   --navy: navy;
   --cyan: cyan;
 }
+#logo_svg path {
+  stroke: black;
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: draw 3s infinite forwards 3s;
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+    stroke-dasharray: 0;
+  }
+}

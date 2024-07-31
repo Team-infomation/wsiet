@@ -71,7 +71,7 @@ export const ModalSection: React.FC = () => {
           <li>선택장애있는 제가 도저히 고를 자신이 없어 만들었습니다.</li>
           <li>음식선별 기준은 지극히 개인적으로 선별하였습니다.</li>
           <li>
-            (예정) 식당 목록은 경기데이터드림(
+            식당 목록은 경기데이터드림(
             <Link
               to={"https://data.gg.go.kr/portal/mainPage.do"}
               target="_blank"
@@ -80,6 +80,7 @@ export const ModalSection: React.FC = () => {
             </Link>
             ) 의 API를 사용하였습니다.
           </li>
+          <li>추후 전국단위의 공공데이터 활용 예정입니다.</li>
           {/* <li>카카오맵 API를 사용하고싶었지만 일정횟수 이상은 유료인지라...</li> */}
         </ul>
         <div className="modal_tit flex flex_jc_c flex_ai_c">
