@@ -109,7 +109,7 @@ export const Result: React.FC = () => {
   useLayoutEffect(() => {
     setTimeout(() => {
       setDummyLoad(true);
-    }, 3000);
+    }, 5000);
     // getFoodStoreInfo();
   }, []);
   useEffect(() => {
@@ -155,8 +155,7 @@ export const Result: React.FC = () => {
   return (
     <>
       {!dummyLoad ? (
-        <DummyLoadFrame className="fixed">
-          사실 로딩 걸릴 일이 없지만 왠지 있어보이고 싶어서 넣었습니다.
+        <DummyLoadFrame className="fixed flex flex_dir_c flex_jc_c flex_ai_c">
           <svg
             width="339"
             height="319"
@@ -186,6 +185,7 @@ export const Result: React.FC = () => {
               fill="black"
             />
           </svg>
+          <div>열심히 식당 리스트를 선별하고 있습니다!</div>
         </DummyLoadFrame>
       ) : (
         <div>
