@@ -85,10 +85,10 @@ export const Home: React.FC = () => {
           setLat(userLat);
           setLon(userLon);
         });
-        // if (!isLoading && data.data.response.status == "OK") {
-        //   setLevel3(data.data.response.result[0].structure.level3);
-        //   setFullLocation(data.data.response.result[0].text);
-        // }
+        if (!isLoading && data.data.response.status == "OK") {
+          setLevel3(data.data.response.result[0].structure.level2);
+          setFullLocation(data.data.response.result[0].text);
+        }
       } else {
         console.log("geolocation을 사용할 수 없어요.");
       }

@@ -1,6 +1,7 @@
 // MODULE
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 // API
 import { getFoodStoreInfo } from "../../api/FoodStore";
@@ -79,11 +80,12 @@ export const Result: React.FC = () => {
   }: any = ResultStore();
   const { setOption1 }: any = Depth1Store();
   const { setOption2 }: any = Depth2Store();
-  const { setOption3 }: any = Depth3Store();
+  const { option3, setOption3 }: any = Depth3Store();
   const { level3, fullLocation }: any = userLocationStore();
 
   const [dummyLoad, setDummyLoad] = useState<boolean>(false);
   const [depth2Id, setDepth2Id] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
 
   const depth1 = FoodJson.type1;
   const maxNum = depth1.length;
@@ -106,11 +108,27 @@ export const Result: React.FC = () => {
     navigate("/");
   };
 
+  // const {
+  //   fetchNextPage,
+  //   fetchPreviousPage,
+  //   hasNextPage,
+  //   hasPreviousPage,
+  //   isFetchingNextPage,
+  //   isFetchingPreviousPage,
+  //   ...result
+  // }:any = useInfiniteQuery({
+  //   queryKey,
+  //   queryFn: ({ pageParam = 1 }) => fetchNextPage(pageParam),
+  //   ...options,
+  //   getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
+  //   getPreviousPageParam: (firstPage, allPages) => firstPage.prevCursor,
+  // });
+
   useLayoutEffect(() => {
     setTimeout(() => {
       setDummyLoad(true);
     }, 5000);
-    // getFoodStoreInfo();
+    option3 && getFoodStoreInfo(level3);
   }, []);
   useEffect(() => {
     const selectedFoodType = depth1[rouellet];
@@ -194,10 +212,10 @@ export const Result: React.FC = () => {
               오늘 밥은 {FoodType.value}!<span>{FoodType.subText}</span>
             </ResultTitle>
           ) : FoodType.key === 6 ? (
-            <>
+            <ResultTitle>
               <span>오늘 밥은 {FoodType.value}!</span>
               <span>{FoodType.subText}</span>
-            </>
+            </ResultTitle>
           ) : (
             <ResultTitle className="flex flex_dir_c flex_jc_c flex_ai_c">
               오늘 밥은 {FoodType.value}!
@@ -213,7 +231,7 @@ export const Result: React.FC = () => {
             event={() => handleRestart()}
           />
 
-          {state.option3 && (
+          {state.option3 && FoodType.key !== 6 && (
             <RestaurantSection>
               <ul className="point_txt">
                 <li>
