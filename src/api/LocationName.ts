@@ -5,7 +5,6 @@ export const getLocationName: any = (lat: number, lon: number) => {
     axios
       .get(`vworld/locationName?lat=${lat}&lon=${lon}`, { headers: {} })
       .then((response) => {
-        console.log("작동");
         resolve(response);
       })
       .catch((error) => {
