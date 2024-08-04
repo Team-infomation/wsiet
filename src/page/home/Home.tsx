@@ -86,7 +86,8 @@ export const Home: React.FC = () => {
           setLon(userLon);
         });
         if (!isLoading && data.data.response.status == "OK") {
-          const level2Name = data.data.response.result[0].structure.level2;
+          const level2Name =
+            data.data.response.result[0].structure.level2.split(/\s/g)[0];
           setLevel3(level2Name);
           setFullLocation(data.data.response.result[0].text);
         }

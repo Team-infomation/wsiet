@@ -80,7 +80,7 @@ export const Result: React.FC = () => {
   }: any = ResultStore();
   const { setOption1 }: any = Depth1Store();
   const { setOption2 }: any = Depth2Store();
-  const { option3, setOption3 }: any = Depth3Store();
+  const { Option3, setOption3 }: any = Depth3Store();
   const { level3, fullLocation }: any = userLocationStore();
 
   const [dummyLoad, setDummyLoad] = useState<boolean>(false);
@@ -127,8 +127,8 @@ export const Result: React.FC = () => {
   useLayoutEffect(() => {
     setTimeout(() => {
       setDummyLoad(true);
-    }, 5000);
-    option3 && getFoodStoreInfo(level3);
+    }, 0);
+    Option3 && getFoodStoreInfo(level3);
   }, []);
   useEffect(() => {
     const selectedFoodType = depth1[rouellet];
@@ -169,7 +169,7 @@ export const Result: React.FC = () => {
       setDepth3FoodType(depth3Food);
     }
   }, [FoodType]);
-  console.log("시간", setDate(new Date()));
+  // console.log("시간", setDate(new Date()));
   return (
     <>
       {!dummyLoad ? (

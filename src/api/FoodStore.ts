@@ -12,7 +12,7 @@ export const getFoodStoreInfo = (location: string) => {
       })
       .catch((error) => {
         reject(error);
-        console.log(error);
+        console.log("식당 데이터 에러 ", error);
       });
   });
 };
