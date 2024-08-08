@@ -85,12 +85,13 @@ export const Home: React.FC = () => {
           setLat(userLat);
           setLon(userLon);
         });
-        if (!isLoading && data.data.response.status == "OK") {
-          const level2Name =
-            data.data.response.result[0].structure.level2.split(/\s/g)[0];
-          setLevel3(level2Name);
-          setFullLocation(data.data.response.result[0].text);
-        }
+        console.log(data);
+        // if (!isLoading && data.data.response.status == "OK") {
+        //   const level2Name =
+        //     data.data.response.result[0].structure.level2.split(/\s/g)[0];
+        //   setLevel3(level2Name);
+        //   setFullLocation(data.data.response.result[0].text);
+        // }
       } else {
         console.log("geolocation을 사용할 수 없어요.");
       }
