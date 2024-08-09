@@ -1,9 +1,9 @@
 import axios from "../util/instance";
 
-export const getFoodStoreInfo = (location: string) => {
+export const getFoodStoreInfo = (location: string, type: string) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`ggdata/store?location=${location}`, {
+      .get(`ggdata/store?location=${location}&type=${type}`, {
         headers: {},
       })
       .then((response) => {

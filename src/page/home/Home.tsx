@@ -58,7 +58,7 @@ export const Home: React.FC = () => {
   const { lat, setLat, lon, setLon }: any = LatLonStore();
   const { level3, setLevel3, fullLocation, setFullLocation }: any =
     userLocationStore();
-
+  console.log("Option1", Option1, "Option2", Option2, "Option3", Option3);
   const { data, isLoading } = useQuery({
     queryKey: ["location", lon, lat],
     queryFn: () =>
@@ -86,12 +86,12 @@ export const Home: React.FC = () => {
           setLon(userLon);
         });
         console.log(data);
-        // if (!isLoading && data.data.response.status == "OK") {
-        //   const level2Name =
-        //     data.data.response.result[0].structure.level2.split(/\s/g)[0];
-        //   setLevel3(level2Name);
-        //   setFullLocation(data.data.response.result[0].text);
-        // }
+        if (!isLoading && data.data.response.status == "OK") {
+          const level2Name =
+            data.data.response.result[0].structure.level2.split(/\s/g)[0];
+          setLevel3(level2Name);
+          setFullLocation(data.data.response.result[0].text);
+        }
       } else {
         console.log("geolocation을 사용할 수 없어요.");
       }

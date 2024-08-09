@@ -108,31 +108,24 @@ export const Result: React.FC = () => {
     navigate("/");
   };
 
-  // const {
-  //   fetchNextPage,
-  //   fetchPreviousPage,
-  //   hasNextPage,
-  //   hasPreviousPage,
-  //   isFetchingNextPage,
-  //   isFetchingPreviousPage,
-  //   ...result
-  // }:any = useInfiniteQuery({
-  //   queryKey,
-  //   queryFn: ({ pageParam = 1 }) => fetchNextPage(pageParam),
-  //   ...options,
-  //   getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
-  //   getPreviousPageParam: (firstPage, allPages) => firstPage.prevCursor,
-  // });
-
   useLayoutEffect(() => {
     setTimeout(() => {
       setDummyLoad(true);
     }, 0);
-    Option3 && getFoodStoreInfo(level3);
+    Option3 && getFoodStoreInfo(level3, FoodType.value);
   }, []);
   useEffect(() => {
     const selectedFoodType = depth1[rouellet];
     setFoodType(selectedFoodType);
+    if (state.option1) {
+      console.log("옵션1");
+      if (state.option2) {
+        console.log("옵션2");
+        if (state.option3) {
+          console.log("옵션3");
+        }
+      }
+    }
     if (state.option1) {
       let depth2FoodType: Depth2Props | any = {};
       let depth3Food: any = {};
@@ -164,11 +157,11 @@ export const Result: React.FC = () => {
           depth3Food = getRandomFood(depth2FoodType.menu);
         }
       }
-
       setDepth2FoodType(depth2FoodType);
       setDepth3FoodType(depth3Food);
     }
   }, [FoodType]);
+
   // console.log("시간", setDate(new Date()));
   return (
     <>
