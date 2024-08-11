@@ -9,6 +9,7 @@ interface Props {
   setDepth2FoodType?: (FoodType: object) => void;
   Depth3FoodType?: Depth3FoodTypeProps;
   setDepth3FoodType?: (FoodType: object) => void;
+  resetResultData: () => void;
 }
 interface LatLonTypeProps {
   lat: number;
@@ -43,6 +44,8 @@ export const ResultStore = create<Props>((set) => ({
   setDepth2FoodType: (foodType: object) => set({ Depth2FoodType: foodType }),
   Depth3FoodType: {},
   setDepth3FoodType: (foodType: object) => set({ Depth3FoodType: foodType }),
+  resetResultData: () =>
+    set({ FoodType: {}, Depth2FoodType: {}, Depth3FoodType: {} }),
 }));
 export const LatLonStore = create<LatLonTypeProps>((set) => ({
   lat: 0,

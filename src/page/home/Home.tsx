@@ -1,15 +1,15 @@
 // MODULE
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 // UTIL
 // STORE
-import { Depth1Store, Depth2Store, Depth3Store } from "../../store/commonStore";
 import { LatLonStore, userLocationStore } from "../../store/resultStore";
 // COMPONENT
 import { Button } from "../../components/common/Button";
 import { getLocationName } from "../../api/LocationName";
+import { DepthOptions } from "../../store/commonStore";
 // STYLED
 const OptionSection = styled.div`
   margin-top: 2rem;
@@ -51,14 +51,17 @@ const RadioButton = styled.div`
 `;
 export const Home: React.FC = () => {
   const navigate = useNavigate();
+  const [options, setOptions] = useState<any>({
+    Option1: false,
+    Option2: false,
+    Option3: false,
+  });
   // STORE
-  const { Option1, setOption1 }: any = Depth1Store();
-  const { Option2, setOption2 }: any = Depth2Store();
-  const { Option3, setOption3 }: any = Depth3Store();
+  const { Option1, setOption1, Option2, setOption2, Option3, setOption3 }: any =
+    DepthOptions();
   const { lat, setLat, lon, setLon }: any = LatLonStore();
   const { level3, setLevel3, fullLocation, setFullLocation }: any =
     userLocationStore();
-  console.log("Option1", Option1, "Option2", Option2, "Option3", Option3);
   const { data, isLoading } = useQuery({
     queryKey: ["location", lon, lat],
     queryFn: () =>
@@ -71,13 +74,16 @@ export const Home: React.FC = () => {
 
   const handleRouletteFood = () => {
     navigate("/result", {
-      state: { option1: Option1, option2: Option2, option3: Option3 },
+      state: {
+        option1: Option1,
+        option2: Option2,
+        option3: Option3,
+      },
     });
   };
 
-  useEffect(() => {}, [Option1, Option2]);
   useEffect(() => {
-    if (Option3) {
+    if (options.Option3) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
           let userLat = position.coords.latitude;
@@ -86,7 +92,7 @@ export const Home: React.FC = () => {
           setLon(userLon);
         });
         console.log(data);
-        if (!isLoading && data.data.response.status == "OK") {
+        if (!isLoading && data.data.response.status === "OK") {
           const level2Name =
             data.data.response.result[0].structure.level2.split(/\s/g)[0];
           setLevel3(level2Name);
@@ -96,7 +102,7 @@ export const Home: React.FC = () => {
         console.log("geolocation을 사용할 수 없어요.");
       }
     }
-  }, [Option3, isLoading]);
+  }, [options, isLoading]);
   return (
     <>
       <div>오늘 뭐먹을지 고민할 시간에 랜덤으로 정해버리자!</div>

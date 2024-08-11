@@ -1,5 +1,5 @@
 // MODULE
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import styled from "styled-components";
@@ -8,17 +8,18 @@ import { getFoodStoreInfo } from "../../api/FoodStore";
 // UTIL
 import { setDate } from "../../util/date";
 // STORE
-import { Depth1Store, Depth2Store, Depth3Store } from "../../store/commonStore";
 import { ResultStore, userLocationStore } from "../../store/resultStore";
+import { DepthOptions } from "../../store/commonStore";
 // COMPONENT
 import { Button } from "../../components/common/Button";
 // JSON
 import FoodJson from "../../json/FoodType.json";
-import KoreanFood from "../../json/Korean.json";
-import AmericanFood from "../../json/America.json";
-import ChinaFood from "../../json/China.json";
-import JapanFood from "../../json/Japan.json";
-import AsianFood from "../../json/Asia.json";
+import koreanFood from "../../json/Korean.json";
+import americanFood from "../../json/America.json";
+import chinaFood from "../../json/China.json";
+import japanFood from "../../json/Japan.json";
+import asianFood from "../../json/Asia.json";
+import FoodData from "../../json/food.json";
 // STYLED
 const DummyLoadFrame = styled.div`
   width: 100vw;
@@ -70,6 +71,8 @@ export const Result: React.FC = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   // STORE
+  const { setOption1, setOption2, setOption3 }: any = DepthOptions();
+
   const {
     FoodType,
     setFoodType,
@@ -77,95 +80,57 @@ export const Result: React.FC = () => {
     setDepth2FoodType,
     Depth3FoodType,
     setDepth3FoodType,
+    resetResultData,
   }: any = ResultStore();
-  const { setOption1 }: any = Depth1Store();
-  const { setOption2 }: any = Depth2Store();
-  const { Option3, setOption3 }: any = Depth3Store();
+
   const { level3, fullLocation }: any = userLocationStore();
-
-  const [dummyLoad, setDummyLoad] = useState<boolean>(false);
-  const [depth2Id, setDepth2Id] = useState<number>(0);
-  const [page, setPage] = useState<number>(1);
-
-  const depth1 = FoodJson.type1;
-  const maxNum = depth1.length;
-  const rouellet = Math.floor(Math.random() * maxNum);
-
-  const getRandomFoodType = (items: any[]) => {
-    let maxNum = items.length;
-    return items[Math.floor(Math.random() * maxNum)];
-  };
-
-  const getRandomFood = (items: any[]) => {
-    let maxNum = items.length;
-    return items[Math.floor(Math.random() * maxNum)];
-  };
+  const [isDataLoad, setIsDataLoad] = useState<boolean>(false);
 
   const handleRestart = () => {
     setOption1(false);
     setOption2(false);
     setOption3(false);
+    resetResultData();
     navigate("/");
   };
 
+  const RandomSelecter: any = (data: any[]) => {
+    return Math.floor(Math.random() * data.length);
+  };
+  console.log(FoodJson.type1);
   useLayoutEffect(() => {
-    setTimeout(() => {
-      setDummyLoad(true);
-    }, 0);
-    Option3 && getFoodStoreInfo(level3, FoodType.value);
+    const setFootTypes = FoodJson.type1[RandomSelecter(FoodJson.type1)];
+    setFoodType(setFootTypes);
+    if (FoodType.key !== "not") {
+      if (state.option1) {
+        const option1FoodType = setFootTypes.key;
+        console.log(option1FoodType);
+        // const option1Result = RandomSelecter(
+        //   option1FoodType === "koreanFood"
+        //     ? koreanFood.koreanFood
+        //     : option1FoodType === "americanFood"
+        //     ? americanFood.americanFood
+        //     : option1FoodType === "chinaFood"
+        //     ? chinaFood.chinaFood
+        //     : option1FoodType === "japanFood"
+        //     ? japanFood.japanFood
+        //     : asianFood.asianFood
+        // );
+        // setDepth2FoodType(option1Result);
+
+        if (state.option2) {
+          console.log("2차 작동");
+          if (state.option3) {
+            console.log("3차 작동");
+          }
+        }
+      }
+    }
   }, []);
-  useEffect(() => {
-    const selectedFoodType = depth1[rouellet];
-    setFoodType(selectedFoodType);
-    if (state.option1) {
-      console.log("옵션1");
-      if (state.option2) {
-        console.log("옵션2");
-        if (state.option3) {
-          console.log("옵션3");
-        }
-      }
-    }
-    if (state.option1) {
-      let depth2FoodType: Depth2Props | any = {};
-      let depth3Food: any = {};
-      setDepth2Id(Depth2FoodType.id);
 
-      if (selectedFoodType.key === 1) {
-        depth2FoodType = getRandomFoodType(KoreanFood.koreanFood);
-        if (state.option2) {
-          depth3Food = getRandomFood(depth2FoodType.menu);
-        }
-      } else if (selectedFoodType.key === 2) {
-        depth2FoodType = getRandomFoodType(AmericanFood.americanFood);
-        if (state.option2) {
-          depth3Food = getRandomFood(depth2FoodType.menu);
-        }
-      } else if (selectedFoodType.key === 3) {
-        depth2FoodType = getRandomFoodType(AsianFood.asiaFood);
-        if (state.option2) {
-          depth3Food = getRandomFood(depth2FoodType.menu);
-        }
-      } else if (selectedFoodType.key === 4) {
-        depth2FoodType = getRandomFoodType(ChinaFood.chinaFood);
-        if (state.option2) {
-          depth3Food = getRandomFood(depth2FoodType.menu);
-        }
-      } else if (selectedFoodType.key === 5) {
-        depth2FoodType = getRandomFoodType(JapanFood.japanFood);
-        if (state.option2) {
-          depth3Food = getRandomFood(depth2FoodType.menu);
-        }
-      }
-      setDepth2FoodType(depth2FoodType);
-      setDepth3FoodType(depth3Food);
-    }
-  }, [FoodType]);
-
-  // console.log("시간", setDate(new Date()));
   return (
     <>
-      {!dummyLoad ? (
+      {isDataLoad ? (
         <DummyLoadFrame className="fixed flex flex_dir_c flex_jc_c flex_ai_c">
           <svg
             width="339"
@@ -224,7 +189,7 @@ export const Result: React.FC = () => {
             event={() => handleRestart()}
           />
 
-          {state.option3 && FoodType.key !== 6 && (
+          {state.option3 && FoodType.key !== "not" && (
             <RestaurantSection>
               <ul className="point_txt">
                 <li>
@@ -239,7 +204,6 @@ export const Result: React.FC = () => {
               <div className="user_location">
                 사용자의 위치 : <span>{level3}</span>
               </div>
-
               <RestaurantList></RestaurantList>
             </RestaurantSection>
           )}
