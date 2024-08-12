@@ -6,7 +6,6 @@ export const getFoodStoreInfo = (
   page: number
 ) => {
   return new Promise((resolve, reject) => {
-    console.log("type", type);
     axios
       .get(`ggdata/store?location=${location}&type=${type}`, {
         headers: {},

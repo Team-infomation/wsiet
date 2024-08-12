@@ -1,5 +1,5 @@
 // MODULE
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import styled from "styled-components";
@@ -108,7 +108,7 @@ export const Result: React.FC = () => {
     isFetchingPreviousPage,
     ...result
   } = useInfiniteQuery({
-    queryKey: ["items"],
+    queryKey: ["items,foodSelect"],
     queryFn: ({ pageParam = 1 }) =>
       getFoodStoreInfo(level3, FoodType.value, pageParam),
     initialPageParam: 1,
@@ -120,11 +120,13 @@ export const Result: React.FC = () => {
       firstPageParam,
       allPageParams
     ) => firstPage.prevCursor,
+    enabled: FoodType.value !== undefined,
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const setFootTypes = FoodJson.type1[RandomSelector(FoodJson.type1)];
     setFoodType(setFootTypes);
+
     if (FoodType.key !== "not") {
       if (state.option1) {
         const option1FoodType = setFootTypes.key;
@@ -144,14 +146,13 @@ export const Result: React.FC = () => {
           const option2Result =
             option1Result.menu[RandomSelector(option1Result.menu)];
           setDepth3FoodType(option2Result);
-          if (state.option3 && FoodType?.value !== undefined) {
-            console.log("3차 작동", FoodType.value);
-            console.log("aaa", result);
+          if (state.option3) {
+            console.log(result);
           }
         }
       }
     }
-  }, [FoodType]);
+  }, []);
 
   return (
     <>
