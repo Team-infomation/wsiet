@@ -86,6 +86,7 @@ export const Result: React.FC = () => {
 
   const { level3, fullLocation }: any = userLocationStore();
   const [isDataLoad, setIsDataLoad] = useState<boolean>(false);
+  const [storeList, setStoreList] = useState<any[]>([]);
 
   const handleRestart = () => {
     setOption1(false);
@@ -107,7 +108,7 @@ export const Result: React.FC = () => {
     isFetchingNextPage,
     isFetchingPreviousPage,
     ...result
-  } = useInfiniteQuery({
+  }: any = useInfiniteQuery({
     queryKey: ["items,foodSelect"],
     queryFn: ({ pageParam = 1 }) =>
       getFoodStoreInfo(level3, FoodType.value, pageParam),
@@ -147,7 +148,11 @@ export const Result: React.FC = () => {
             option1Result.menu[RandomSelector(option1Result.menu)];
           setDepth3FoodType(option2Result);
           if (state.option3) {
-            console.log(result);
+            console.log(
+              "aaa",
+              result.data.pages[0].data.SafetyRestrntInfo[1].row
+            );
+            setStoreList(result.data.pages[0].data.SafetyRestrntInfo[1].row);
           }
         }
       }
@@ -230,7 +235,12 @@ export const Result: React.FC = () => {
               <div className="user_location">
                 사용자의 위치 : <span>{level3}</span>
               </div>
-              <RestaurantList></RestaurantList>
+              <RestaurantList>
+                {/* {storeList !== null &&
+                  storeList.map((store: any, index: number) => (
+                    <li key={index}>{store?.BIZPLC_NM}</li>
+                  ))} */}
+              </RestaurantList>
             </RestaurantSection>
           )}
         </div>
