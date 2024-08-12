@@ -67,6 +67,7 @@ type Depth2Props = {
   value?: string;
   menu?: any[];
 };
+
 export const Result: React.FC = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -94,39 +95,63 @@ export const Result: React.FC = () => {
     navigate("/");
   };
 
-  const RandomSelecter: any = (data: any[]) => {
+  const RandomSelector: any = (data: any[]) => {
     return Math.floor(Math.random() * data.length);
   };
-  console.log(FoodJson.type1);
+
+  const {
+    fetchNextPage,
+    fetchPreviousPage,
+    hasNextPage,
+    hasPreviousPage,
+    isFetchingNextPage,
+    isFetchingPreviousPage,
+    ...result
+  } = useInfiniteQuery({
+    queryKey: ["items"],
+    queryFn: ({ pageParam = 1 }) =>
+      getFoodStoreInfo(level3, FoodType.value, pageParam),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage: any, allPages, lastPageParam, allPageParams) =>
+      lastPage.nextCursor,
+    getPreviousPageParam: (
+      firstPage: any,
+      allPages,
+      firstPageParam,
+      allPageParams
+    ) => firstPage.prevCursor,
+  });
+
   useLayoutEffect(() => {
-    const setFootTypes = FoodJson.type1[RandomSelecter(FoodJson.type1)];
+    const setFootTypes = FoodJson.type1[RandomSelector(FoodJson.type1)];
     setFoodType(setFootTypes);
     if (FoodType.key !== "not") {
       if (state.option1) {
         const option1FoodType = setFootTypes.key;
-        console.log(option1FoodType);
-        // const option1Result = RandomSelecter(
-        //   option1FoodType === "koreanFood"
-        //     ? koreanFood.koreanFood
-        //     : option1FoodType === "americanFood"
-        //     ? americanFood.americanFood
-        //     : option1FoodType === "chinaFood"
-        //     ? chinaFood.chinaFood
-        //     : option1FoodType === "japanFood"
-        //     ? japanFood.japanFood
-        //     : asianFood.asianFood
-        // );
-        // setDepth2FoodType(option1Result);
-
+        const foodMenu: any =
+          option1FoodType === "koreanFood"
+            ? koreanFood.koreanFood
+            : option1FoodType === "americanFood"
+            ? americanFood.americanFood
+            : option1FoodType === "chinaFood"
+            ? chinaFood.chinaFood
+            : option1FoodType === "japanFood"
+            ? japanFood.japanFood
+            : asianFood.asianFood;
+        const option1Result = foodMenu[RandomSelector(foodMenu)];
+        setDepth2FoodType(option1Result);
         if (state.option2) {
-          console.log("2차 작동");
-          if (state.option3) {
-            console.log("3차 작동");
+          const option2Result =
+            option1Result.menu[RandomSelector(option1Result.menu)];
+          setDepth3FoodType(option2Result);
+          if (state.option3 && FoodType?.value !== undefined) {
+            console.log("3차 작동", FoodType.value);
+            console.log("aaa", result);
           }
         }
       }
     }
-  }, []);
+  }, [FoodType]);
 
   return (
     <>
@@ -169,7 +194,7 @@ export const Result: React.FC = () => {
             <ResultTitle className="flex flex_dir_c flex_jc_c flex_ai_c">
               오늘 밥은 {FoodType.value}!<span>{FoodType.subText}</span>
             </ResultTitle>
-          ) : FoodType.key === 6 ? (
+          ) : FoodType.key === "not" ? (
             <ResultTitle>
               <span>오늘 밥은 {FoodType.value}!</span>
               <span>{FoodType.subText}</span>

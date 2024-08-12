@@ -83,7 +83,7 @@ export const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    if (options.Option3) {
+    if (Option3) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
           let userLat = position.coords.latitude;
@@ -91,7 +91,7 @@ export const Home: React.FC = () => {
           setLat(userLat);
           setLon(userLon);
         });
-        console.log(data);
+        console.log("data", data);
         if (!isLoading && data.data.response.status === "OK") {
           const level2Name =
             data.data.response.result[0].structure.level2.split(/\s/g)[0];
@@ -102,7 +102,7 @@ export const Home: React.FC = () => {
         console.log("geolocation을 사용할 수 없어요.");
       }
     }
-  }, [options, isLoading]);
+  }, [options, Option3, isLoading]);
   return (
     <>
       <div>오늘 뭐먹을지 고민할 시간에 랜덤으로 정해버리자!</div>
