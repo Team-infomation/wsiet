@@ -92,7 +92,7 @@ export const Home: React.FC = () => {
           setLon(userLon);
         });
         console.log("data", data);
-        if (!isLoading && data.data.response.status === "OK") {
+        if (!isLoading && data?.data?.response?.status === "OK") {
           const level2Name =
             data.data.response.result[0].structure.level2.split(/\s/g)[0];
           setLevel3(level2Name);
