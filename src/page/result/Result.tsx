@@ -1,5 +1,5 @@
 // MODULE
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
@@ -60,6 +60,10 @@ const RestaurantSection = styled.div`
       word-break: keep-all;
     }
   }
+  .user_location {
+    padding-bottom: 1rem;
+    box-shadow: 0px 10px 10px -10px rgba(0, 0, 0, 0.5);
+  }
 `;
 const RestaurantList = styled.ul`
   max-height: 40vh;
@@ -87,6 +91,15 @@ const RestaurantList = styled.ul`
       a {
         padding: 1rem;
         border: 1px solid #666;
+      }
+    }
+    .kakao_map_search {
+      a {
+        padding: 1rem;
+        background: #fee500;
+        border-radius: 12px;
+        font-weight: 700;
+        color: #000000;
       }
     }
   }
@@ -159,7 +172,7 @@ export const Result: React.FC = () => {
       firstPageParam,
       allPageParams
     ) => firstPage?.prevCursor,
-    enabled: FoodType.value !== undefined,
+    enabled: !!FoodType.value && FoodType.key !== "not",
   });
 
   useEffect(() => {
@@ -192,6 +205,29 @@ export const Result: React.FC = () => {
       }
     }
   }, []);
+
+  // const removeDuplicates = (array: any[], keys: string[]) => {
+  //   const uniqueItems = array.filter((item, index, self) => {
+  //     const identifier = keys.map((key) => item[key]).join("|");
+  //     return (
+  //       index ===
+  //       self.findIndex(
+  //         (t) => keys.map((key) => t[key]).join("|") === identifier
+  //       )
+  //     );
+  //   });
+  //   return uniqueItems;
+  // };
+  // const uniqueStoreList = useMemo(
+  //   () =>
+  //     removeDuplicates(data?.pages[0][1]?.row, [
+  //       "BIZPLC_NM",
+  //       "REFINE_ROADNM_ADDR",
+  //     ]),
+  //   [storeList]
+  // );
+
+  // console.log("uniqueStoreList", uniqueStoreList);
   return (
     <>
       {isDataLoad ? (
@@ -273,15 +309,19 @@ export const Result: React.FC = () => {
                 사용자의 위치 : <span>{level3}</span>
               </div>
               <RestaurantList>
-                {storeList !== undefined
-                  ? storeList.map((store: any, index: number) => (
+                {!isLoading
+                  ? data?.pages[0][1]?.row.map((store: any, index: number) => (
                       <li key={index}>
                         <div className="store_name flex flex_ai_c">
                           상호명 : {store?.BIZPLC_NM}{" "}
                           <p>{store.INDUTYPE_DETAIL_NM}</p>
                         </div>
                         <div className="store_address">
-                          주소 : {store.REFINE_ROADNM_ADDR},{store.DETAIL_ADDR}
+                          주소 :{" "}
+                          {store.REFINE_ROADNM_ADDR === null
+                            ? store.EFINE_LOTNO_ADDR
+                            : store.REFINE_ROADNM_ADDR}
+                          ,{store.DETAIL_ADDR}
                         </div>
                         {store.TELNO !== null && (
                           <div className="tel">
@@ -293,6 +333,15 @@ export const Result: React.FC = () => {
                             </a>
                           </div>
                         )}
+                        <div className="kakao_map_search">
+                          <a
+                            href={`https://map.kakao.com/link/search/${store?.BIZPLC_NM}`}
+                            target="_blank"
+                            className="flex flex_jc_c flex_ai_c"
+                          >
+                            카카오맵으로 지도보기
+                          </a>
+                        </div>
                       </li>
                     ))
                   : ""}
