@@ -1,7 +1,8 @@
 // MODULE
-import { useLayoutEffect, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
 import styled from "styled-components";
 // API
 import { getFoodStoreInfo } from "../../api/FoodStore";
@@ -60,7 +61,36 @@ const RestaurantSection = styled.div`
     }
   }
 `;
-const RestaurantList = styled.ul``;
+const RestaurantList = styled.ul`
+  max-height: 40vh;
+  overflow: auto;
+  li {
+    padding: 0.8rem;
+    margin: 1rem 0;
+    border-bottom: 1px solid #666;
+    .store_name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      p {
+        margin-left: 2rem;
+        font-size: 1.3rem;
+      }
+    }
+    .store_address {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #666666;
+      word-break: keep-all;
+    }
+    .tel {
+      margin: 1rem 0;
+      a {
+        padding: 1rem;
+        border: 1px solid #666;
+      }
+    }
+  }
+`;
 // PROPS
 type Depth2Props = {
   id?: number;
@@ -86,8 +116,9 @@ export const Result: React.FC = () => {
 
   const { level3, fullLocation }: any = userLocationStore();
   const [isDataLoad, setIsDataLoad] = useState<boolean>(false);
-  const [storeList, setStoreList] = useState<any[]>([]);
+  const [storeList, setStoreList] = useState<any>([]);
 
+  const [ref, inView] = useInView();
   const handleRestart = () => {
     setOption1(false);
     setOption2(false);
@@ -107,20 +138,27 @@ export const Result: React.FC = () => {
     hasPreviousPage,
     isFetchingNextPage,
     isFetchingPreviousPage,
+    isLoading,
+    isFetching,
+    data,
     ...result
   }: any = useInfiniteQuery({
     queryKey: ["items,foodSelect"],
     queryFn: ({ pageParam = 1 }) =>
-      getFoodStoreInfo(level3, FoodType.value, pageParam),
+      getFoodStoreInfo(
+        level3,
+        FoodType.value === "아시아 음식" ? "기타외국식" : FoodType.value,
+        pageParam
+      ),
     initialPageParam: 1,
     getNextPageParam: (lastPage: any, allPages, lastPageParam, allPageParams) =>
-      lastPage.nextCursor,
+      lastPage?.nextCursor,
     getPreviousPageParam: (
       firstPage: any,
       allPages,
       firstPageParam,
       allPageParams
-    ) => firstPage.prevCursor,
+    ) => firstPage?.prevCursor,
     enabled: FoodType.value !== undefined,
   });
 
@@ -148,17 +186,12 @@ export const Result: React.FC = () => {
             option1Result.menu[RandomSelector(option1Result.menu)];
           setDepth3FoodType(option2Result);
           if (state.option3) {
-            console.log(
-              "aaa",
-              result.data.pages[0].data.SafetyRestrntInfo[1].row
-            );
-            setStoreList(result.data.pages[0].data.SafetyRestrntInfo[1].row);
+            setStoreList(data?.pages[0][1]?.row);
           }
         }
       }
     }
   }, []);
-
   return (
     <>
       {isDataLoad ? (
@@ -223,8 +256,12 @@ export const Result: React.FC = () => {
           {state.option3 && FoodType.key !== "not" && (
             <RestaurantSection>
               <ul className="point_txt">
-                <li>
+                {/* <li>
                   현재 사용자 위치 기준으로 반경 5km 이내에 있는 식당
+                  목록입니다!
+                </li> */}
+                <li>
+                  현재 사용자의 위치 기준으로 같은 시 기준으로 나온 식당
                   목록입니다!
                 </li>
                 <li>
@@ -236,10 +273,29 @@ export const Result: React.FC = () => {
                 사용자의 위치 : <span>{level3}</span>
               </div>
               <RestaurantList>
-                {/* {storeList !== null &&
-                  storeList.map((store: any, index: number) => (
-                    <li key={index}>{store?.BIZPLC_NM}</li>
-                  ))} */}
+                {storeList !== undefined
+                  ? storeList.map((store: any, index: number) => (
+                      <li key={index}>
+                        <div className="store_name flex flex_ai_c">
+                          상호명 : {store?.BIZPLC_NM}{" "}
+                          <p>{store.INDUTYPE_DETAIL_NM}</p>
+                        </div>
+                        <div className="store_address">
+                          주소 : {store.REFINE_ROADNM_ADDR},{store.DETAIL_ADDR}
+                        </div>
+                        {store.TELNO !== null && (
+                          <div className="tel">
+                            <a
+                              href={`tel:${store.TELNO}`}
+                              className="flex flex_jc_c flex_ai_c"
+                            >
+                              전화번호 : {store.TELNO}
+                            </a>
+                          </div>
+                        )}
+                      </li>
+                    ))
+                  : ""}
               </RestaurantList>
             </RestaurantSection>
           )}

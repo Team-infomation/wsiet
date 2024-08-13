@@ -11,7 +11,7 @@ export const getFoodStoreInfo = (
         headers: {},
       })
       .then((response) => {
-        resolve(response);
+        resolve(response.data.SafetyRestrntInfo);
       })
       .catch((error) => {
         reject(error);

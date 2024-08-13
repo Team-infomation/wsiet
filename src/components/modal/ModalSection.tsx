@@ -73,12 +73,14 @@ export const ModalSection: React.FC = () => {
           <li>
             식당 목록은 경기데이터드림(
             <Link
-              to={"https://data.gg.go.kr/portal/mainPage.do"}
+              to={
+                "https://data.gg.go.kr/portal/data/service/selectServicePage.do?page=1&sortColumn=&sortDirection=&infId=YBSSB8F816M3B966AB6K30423820&infSeq=1&searchWord=%EC%8B%9D%EB%8B%B9"
+              }
               target="_blank"
             >
               https://data.gg.go.kr/portal/mainPage.do
             </Link>
-            ) 의 API를 사용하였습니다.
+            ) 의 안심식당 정보 API를 사용하였습니다.
           </li>
           <li>추후 전국단위의 공공데이터 활용 예정입니다.</li>
           {/* <li>카카오맵 API를 사용하고싶었지만 일정횟수 이상은 유료인지라...</li> */}
