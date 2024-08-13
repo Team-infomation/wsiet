@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/wsiet/static/css/main.342d304d.css",
-    "main.js": "/wsiet/static/js/main.5fb343bb.js",
+    "main.js": "/wsiet/static/js/main.d10f9506.js",
     "static/js/453.93ffe255.chunk.js": "/wsiet/static/js/453.93ffe255.chunk.js",
     "index.html": "/wsiet/index.html",
     "main.342d304d.css.map": "/wsiet/static/css/main.342d304d.css.map",
-    "main.5fb343bb.js.map": "/wsiet/static/js/main.5fb343bb.js.map",
+    "main.d10f9506.js.map": "/wsiet/static/js/main.d10f9506.js.map",
     "453.93ffe255.chunk.js.map": "/wsiet/static/js/453.93ffe255.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.342d304d.css",
-    "static/js/main.5fb343bb.js"
+    "static/js/main.d10f9506.js"
   ]
 }
