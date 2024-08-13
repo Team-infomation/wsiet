@@ -28,7 +28,7 @@ root.render(
         <div>앵? 핸드폰이 아니네요?</div>
       )}
     </CookiesProvider>
-    <ReactQueryDevtools />
+    {/* <ReactQueryDevtools /> */}
   </QueryClientProvider>
   // </React.StrictMode>
 );
