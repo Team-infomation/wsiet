@@ -7,7 +7,7 @@ export const getFoodStoreInfo = (
 ) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`ggdata/store?location=${location}&type=${type}`, {
+      .get(`ggdata/store?location=${location}&type=${type}&page=${page}`, {
         headers: {},
       })
       .then((response) => {

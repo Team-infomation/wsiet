@@ -71,6 +71,17 @@ export const ModalSection: React.FC = () => {
           <li>선택장애있는 제가 도저히 고를 자신이 없어 만들었습니다.</li>
           <li>음식선별 기준은 지극히 개인적으로 선별하였습니다.</li>
           <li>
+            위치 기반의 경우 geolocation을 통하여 사용자의 위도·경도값을 받아온
+            후 V-WORLD 디지털트윈국토 의{" "}
+            <Link
+              to={"https://www.vworld.kr/dev/v4dv_geocoderguide2_s001.do"}
+              target="_blank"
+            >
+              Geocoder API 2.0 레퍼런스
+            </Link>{" "}
+            를 통하여 사용자가 현재 위치한 지역의 동 이름을 받아오고 있습니다.
+          </li>
+          <li>
             식당 목록은 경기데이터드림(
             <Link
               to={

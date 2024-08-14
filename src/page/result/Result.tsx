@@ -78,6 +78,7 @@ const RestaurantList = styled.ul`
       p {
         margin-left: 2rem;
         font-size: 1.3rem;
+        white-space: nowrap;
       }
     }
     .store_address {
@@ -130,6 +131,8 @@ export const Result: React.FC = () => {
   const { level3, fullLocation }: any = userLocationStore();
   const [isDataLoad, setIsDataLoad] = useState<boolean>(false);
   const [storeList, setStoreList] = useState<any>([]);
+  const [totalPage, setTotalPage] = useState<any | number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const [ref, inView] = useInView();
   const handleRestart = () => {
@@ -146,22 +149,18 @@ export const Result: React.FC = () => {
 
   const {
     fetchNextPage,
-    fetchPreviousPage,
     hasNextPage,
-    hasPreviousPage,
     isFetchingNextPage,
-    isFetchingPreviousPage,
     isLoading,
-    isFetching,
     data,
     ...result
   }: any = useInfiniteQuery({
     queryKey: ["items,foodSelect"],
-    queryFn: ({ pageParam = 1 }) =>
+    queryFn: ({ pageParam = currentPage }) =>
       getFoodStoreInfo(
         level3,
         FoodType.value === "아시아 음식" ? "기타외국식" : FoodType.value,
-        pageParam
+        currentPage
       ),
     initialPageParam: 1,
     getNextPageParam: (lastPage: any, allPages, lastPageParam, allPageParams) =>
@@ -200,34 +199,50 @@ export const Result: React.FC = () => {
           setDepth3FoodType(option2Result);
           if (state.option3) {
             setStoreList(data?.pages[0][1]?.row);
+            setTotalPage(
+              Math.ceil(data?.pages[0][0]?.head[0].list_total_count / 100)
+            );
           }
         }
       }
     }
   }, []);
 
-  // const removeDuplicates = (array: any[], keys: string[]) => {
-  //   const uniqueItems = array.filter((item, index, self) => {
-  //     const identifier = keys.map((key) => item[key]).join("|");
-  //     return (
-  //       index ===
-  //       self.findIndex(
-  //         (t) => keys.map((key) => t[key]).join("|") === identifier
-  //       )
-  //     );
-  //   });
-  //   return uniqueItems;
-  // };
-  // const uniqueStoreList = useMemo(
-  //   () =>
-  //     removeDuplicates(data?.pages[0][1]?.row, [
-  //       "BIZPLC_NM",
-  //       "REFINE_ROADNM_ADDR",
-  //     ]),
-  //   [storeList]
-  // );
+  const removeDuplicates = (array: any[], keys: string[]) => {
+    const uniqueItems = array.filter((item, index, self) => {
+      const identifier = keys.map((key) => item[key]).join("|");
+      return (
+        index ===
+        self.findIndex(
+          (t) => keys.map((key) => t[key]).join("|") === identifier
+        )
+      );
+    });
+    return uniqueItems;
+  };
+  const uniqueStoreList: any = useMemo(
+    () =>
+      data !== undefined &&
+      !isLoading &&
+      removeDuplicates(data?.pages[0][1]?.row, [
+        "BIZPLC_NM",
+        "REFINE_ROADNM_ADDR",
+      ]),
+    [storeList]
+  );
+  useEffect(() => {
+    // if (inView) {
+    //   if (totalPage > currentPage) {
+    //     setCurrentPage(currentPage + 1);
+    //     console.log("result", result);
+    //   } else {
+    //     return;
+    //   }
+    // }
+    // console.log("전체페이지", totalPage);
+    // console.log(inView, currentPage);
+  }, [inView]);
 
-  // console.log("uniqueStoreList", uniqueStoreList);
   return (
     <>
       {isDataLoad ? (
@@ -304,14 +319,24 @@ export const Result: React.FC = () => {
                   식당 목록은 경기데이터드림의 안심식당정보 목록을 사용하고
                   있습니다.
                 </li>
+                <li>
+                  현재 중복 데이터 처리 후 Infinity Scroll 적용, 현재위치
+                  기준으로 반경 5km 이내 식당목록 적용 전 입니다.
+                </li>
               </ul>
               <div className="user_location">
                 사용자의 위치 : <span>{level3}</span>
               </div>
               <RestaurantList>
-                {!isLoading
-                  ? data?.pages[0][1]?.row.map((store: any, index: number) => (
-                      <li key={index}>
+                {!isLoading && data !== undefined
+                  ? removeDuplicates(data?.pages[0][1]?.row, [
+                      "BIZPLC_NM",
+                      "REFINE_ROADNM_ADDR",
+                    ]).map((store: any, index: number) => (
+                      <li
+                        key={index}
+                        ref={index === uniqueStoreList.length - 1 ? ref : null}
+                      >
                         <div className="store_name flex flex_ai_c">
                           상호명 : {store?.BIZPLC_NM}{" "}
                           <p>{store.INDUTYPE_DETAIL_NM}</p>
@@ -319,7 +344,7 @@ export const Result: React.FC = () => {
                         <div className="store_address">
                           주소 :{" "}
                           {store.REFINE_ROADNM_ADDR === null
-                            ? store.EFINE_LOTNO_ADDR
+                            ? store.REFINE_LOTNO_ADDR
                             : store.REFINE_ROADNM_ADDR}
                           ,{store.DETAIL_ADDR}
                         </div>
