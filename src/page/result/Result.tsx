@@ -1,6 +1,6 @@
 // MODULE
-import { useState, useEffect, useMemo } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import styled from "styled-components";
@@ -146,7 +146,6 @@ export const Result: React.FC = () => {
   const RandomSelector: any = (data: any[]) => {
     return Math.floor(Math.random() * data.length);
   };
-
   const {
     fetchNextPage,
     hasNextPage,
@@ -155,12 +154,12 @@ export const Result: React.FC = () => {
     data,
     ...result
   }: any = useInfiniteQuery({
-    queryKey: ["items,foodSelect"],
-    queryFn: ({ pageParam = currentPage }) =>
+    queryKey: ["foodSelect", level3, FoodType.value, currentPage],
+    queryFn: ({ pageParam = 1 }) =>
       getFoodStoreInfo(
         level3,
         FoodType.value === "아시아 음식" ? "기타외국식" : FoodType.value,
-        currentPage
+        pageParam
       ),
     initialPageParam: 1,
     getNextPageParam: (lastPage: any, allPages, lastPageParam, allPageParams) =>
@@ -198,10 +197,11 @@ export const Result: React.FC = () => {
             option1Result.menu[RandomSelector(option1Result.menu)];
           setDepth3FoodType(option2Result);
           if (state.option3) {
-            setStoreList(data?.pages[0][1]?.row);
-            setTotalPage(
-              Math.ceil(data?.pages[0][0]?.head[0].list_total_count / 100)
-            );
+            if (!isLoading) {
+              setTotalPage(
+                Math.ceil(data?.pages[0][0]?.head[0].list_total_count / 100)
+              );
+            }
           }
         }
       }
@@ -220,27 +220,12 @@ export const Result: React.FC = () => {
     });
     return uniqueItems;
   };
-  const uniqueStoreList: any = useMemo(
-    () =>
-      data !== undefined &&
-      !isLoading &&
-      removeDuplicates(data?.pages[0][1]?.row, [
-        "BIZPLC_NM",
-        "REFINE_ROADNM_ADDR",
-      ]),
-    [storeList]
-  );
+
   useEffect(() => {
-    // if (inView) {
-    //   if (totalPage > currentPage) {
-    //     setCurrentPage(currentPage + 1);
-    //     console.log("result", result);
-    //   } else {
-    //     return;
-    //   }
-    // }
-    // console.log("전체페이지", totalPage);
-    // console.log(inView, currentPage);
+    if (inView) {
+      fetchNextPage();
+      console.log("result", result);
+    }
   }, [inView]);
 
   return (
@@ -307,10 +292,6 @@ export const Result: React.FC = () => {
           {state.option3 && FoodType.key !== "not" && (
             <RestaurantSection>
               <ul className="point_txt">
-                {/* <li>
-                  현재 사용자 위치 기준으로 반경 5km 이내에 있는 식당
-                  목록입니다!
-                </li> */}
                 <li>
                   현재 사용자의 위치 기준으로 같은 시 기준으로 나온 식당
                   목록입니다!
@@ -335,10 +316,19 @@ export const Result: React.FC = () => {
                     ]).map((store: any, index: number) => (
                       <li
                         key={index}
-                        ref={index === uniqueStoreList.length - 1 ? ref : null}
+                        ref={
+                          index ===
+                          removeDuplicates(data?.pages[0][1]?.row, [
+                            "BIZPLC_NM",
+                            "REFINE_ROADNM_ADDR",
+                          ]).length -
+                            1
+                            ? ref
+                            : null
+                        }
                       >
                         <div className="store_name flex flex_ai_c">
-                          상호명 : {store?.BIZPLC_NM}{" "}
+                          {index} 상호명 : {store?.BIZPLC_NM}{" "}
                           <p>{store.INDUTYPE_DETAIL_NM}</p>
                         </div>
                         <div className="store_address">
@@ -359,13 +349,13 @@ export const Result: React.FC = () => {
                           </div>
                         )}
                         <div className="kakao_map_search">
-                          <a
-                            href={`https://map.kakao.com/link/search/${store?.BIZPLC_NM}`}
+                          <Link
+                            to={`https://map.kakao.com/link/search/${store?.BIZPLC_NM}`}
                             target="_blank"
                             className="flex flex_jc_c flex_ai_c"
                           >
                             카카오맵으로 지도보기
-                          </a>
+                          </Link>
                         </div>
                       </li>
                     ))
