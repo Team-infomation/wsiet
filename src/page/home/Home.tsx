@@ -171,10 +171,6 @@ export const Home: React.FC = () => {
           <div className="alert_message">
             ※ 현재 반경 5km 이내의 식당만 받아올 수 있게 수정중 입니다.
           </div>
-          <div className="alert_message">
-            ※ github 를 통하여 프로젝트를 운영중인데 왜 ssl 문제가 생기는지
-            원인을 찾는 중 입니다... ㅠ
-          </div>
           <div className="flex flex_dir_c flex_jc_sb flex_ai_c">
             <RadioButton className="flex flex_jc_c flex_ai_c">
               <input

@@ -95,6 +95,7 @@ const RestaurantList = styled.ul`
       }
     }
     .kakao_map_search {
+      margin-top: 1rem;
       a {
         padding: 1rem;
         background: #fee500;
@@ -155,21 +156,15 @@ export const Result: React.FC = () => {
     ...result
   }: any = useInfiniteQuery({
     queryKey: ["foodSelect", level3, FoodType.value, currentPage],
-    queryFn: ({ pageParam = 1 }) =>
+    queryFn: ({ pageParam = currentPage }) =>
       getFoodStoreInfo(
         level3,
         FoodType.value === "아시아 음식" ? "기타외국식" : FoodType.value,
-        pageParam
+        currentPage
       ),
     initialPageParam: 1,
-    getNextPageParam: (lastPage: any, allPages, lastPageParam, allPageParams) =>
-      lastPage?.nextCursor,
-    getPreviousPageParam: (
-      firstPage: any,
-      allPages,
-      firstPageParam,
-      allPageParams
-    ) => firstPage?.prevCursor,
+    getNextPageParam: (lastPage: any) => lastPage?.nextCursor,
+    getPreviousPageParam: (firstPage: any) => firstPage?.prevCursor,
     enabled: !!FoodType.value && FoodType.key !== "not",
   });
 
@@ -196,13 +191,6 @@ export const Result: React.FC = () => {
           const option2Result =
             option1Result.menu[RandomSelector(option1Result.menu)];
           setDepth3FoodType(option2Result);
-          if (state.option3) {
-            if (!isLoading) {
-              setTotalPage(
-                Math.ceil(data?.pages[0][0]?.head[0].list_total_count / 100)
-              );
-            }
-          }
         }
       }
     }
@@ -222,12 +210,27 @@ export const Result: React.FC = () => {
   };
 
   useEffect(() => {
+    let totalPage = Math.ceil(
+      data?.pages[0][0]?.head[0].list_total_count / 100
+    );
     if (inView) {
-      fetchNextPage();
-      console.log("result", result);
+      if (currentPage < totalPage) {
+        setCurrentPage(currentPage + 1);
+        fetchNextPage();
+      }
     }
   }, [inView]);
 
+  useEffect(() => {
+    if (data) {
+      setStoreList((prevStoreList: any) => [
+        ...prevStoreList,
+        ...data.pages.flatMap((page: any) =>
+          removeDuplicates(page[1].row, ["BIZPLC_NM", "REFINE_ROADNM_ADDR"])
+        ),
+      ]);
+    }
+  }, [data]);
   return (
     <>
       {isDataLoad ? (
@@ -309,57 +312,43 @@ export const Result: React.FC = () => {
                 사용자의 위치 : <span>{level3}</span>
               </div>
               <RestaurantList>
-                {!isLoading && data !== undefined
-                  ? removeDuplicates(data?.pages[0][1]?.row, [
-                      "BIZPLC_NM",
-                      "REFINE_ROADNM_ADDR",
-                    ]).map((store: any, index: number) => (
-                      <li
-                        key={index}
-                        ref={
-                          index ===
-                          removeDuplicates(data?.pages[0][1]?.row, [
-                            "BIZPLC_NM",
-                            "REFINE_ROADNM_ADDR",
-                          ]).length -
-                            1
-                            ? ref
-                            : null
-                        }
+                {storeList.map((store: any, index: number) => (
+                  <li
+                    key={index}
+                    ref={index === storeList.length - 1 ? ref : null}
+                  >
+                    <div className="store_name flex flex_ai_c">
+                      상호명 : {store?.BIZPLC_NM}
+                      <p>{store.INDUTYPE_DETAIL_NM}</p>
+                    </div>
+                    <div className="store_address">
+                      주소 :{" "}
+                      {store.REFINE_ROADNM_ADDR === null
+                        ? store.REFINE_LOTNO_ADDR
+                        : store.REFINE_ROADNM_ADDR}
+                      ,{store.DETAIL_ADDR}
+                    </div>
+                    {store.TELNO !== null && (
+                      <div className="tel">
+                        <a
+                          href={`tel:${store.TELNO}`}
+                          className="flex flex_jc_c flex_ai_c"
+                        >
+                          전화번호 : {store.TELNO}
+                        </a>
+                      </div>
+                    )}
+                    <div className="kakao_map_search">
+                      <Link
+                        to={`https://map.kakao.com/link/search/${store?.BIZPLC_NM}`}
+                        target="_blank"
+                        className="flex flex_jc_c flex_ai_c"
                       >
-                        <div className="store_name flex flex_ai_c">
-                          {index} 상호명 : {store?.BIZPLC_NM}{" "}
-                          <p>{store.INDUTYPE_DETAIL_NM}</p>
-                        </div>
-                        <div className="store_address">
-                          주소 :{" "}
-                          {store.REFINE_ROADNM_ADDR === null
-                            ? store.REFINE_LOTNO_ADDR
-                            : store.REFINE_ROADNM_ADDR}
-                          ,{store.DETAIL_ADDR}
-                        </div>
-                        {store.TELNO !== null && (
-                          <div className="tel">
-                            <a
-                              href={`tel:${store.TELNO}`}
-                              className="flex flex_jc_c flex_ai_c"
-                            >
-                              전화번호 : {store.TELNO}
-                            </a>
-                          </div>
-                        )}
-                        <div className="kakao_map_search">
-                          <Link
-                            to={`https://map.kakao.com/link/search/${store?.BIZPLC_NM}`}
-                            target="_blank"
-                            className="flex flex_jc_c flex_ai_c"
-                          >
-                            카카오맵으로 지도보기
-                          </Link>
-                        </div>
-                      </li>
-                    ))
-                  : ""}
+                        카카오맵으로 지도보기
+                      </Link>
+                    </div>
+                  </li>
+                ))}
               </RestaurantList>
             </RestaurantSection>
           )}
