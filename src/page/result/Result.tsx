@@ -351,7 +351,7 @@ export const Result: React.FC = () => {
                 </li>
               </ul>
               <div className="result_option flex flex_jc_sb flex_ai_c">
-                <div className="distance_option">
+                {/* <div className="distance_option">
                   <p>내 위치와의 거리</p>
                   <select name="" id="">
                     <option value="">500m</option>
@@ -360,9 +360,9 @@ export const Result: React.FC = () => {
                     <option value="">5km</option>
                     <option value="">상관없음</option>
                   </select>
-                </div>
+                </div> */}
                 <div className="custom_option">
-                  <p>전화번호가 없는 가게</p>
+                  <p>전화번호가 없는 가게 표시여부</p>
                   <div className="flex flex_jc_sb flex_ai_c">
                     <div>
                       <input type="radio" id="hasTel" name="tel" checked />
