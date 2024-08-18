@@ -10,6 +10,7 @@ import { LatLonStore, userLocationStore } from "../../store/resultStore";
 import { Button } from "../../components/common/Button";
 import { getLocationName } from "../../api/LocationName";
 import { DepthOptions } from "../../store/commonStore";
+
 // STYLED
 const OptionSection = styled.div`
   margin-top: 2rem;
@@ -60,8 +61,7 @@ export const Home: React.FC = () => {
   const { Option1, setOption1, Option2, setOption2, Option3, setOption3 }: any =
     DepthOptions();
   const { lat, setLat, lon, setLon }: any = LatLonStore();
-  const { level3, setLevel3, fullLocation, setFullLocation }: any =
-    userLocationStore();
+  const { setLevel3, setFullLocation }: any = userLocationStore();
   const { data, isLoading } = useQuery({
     queryKey: ["location", lon, lat],
     queryFn: () =>
@@ -78,6 +78,8 @@ export const Home: React.FC = () => {
         option1: Option1,
         option2: Option2,
         option3: Option3,
+        lat: lat,
+        lon: lon,
       },
     });
   };
@@ -102,6 +104,7 @@ export const Home: React.FC = () => {
       }
     }
   }, [options, Option3, isLoading]);
+
   return (
     <>
       <div>오늘 뭐먹을지 고민할 시간에 랜덤으로 정해버리자!</div>

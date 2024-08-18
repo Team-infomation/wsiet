@@ -20,7 +20,6 @@ import americanFood from "../../json/America.json";
 import chinaFood from "../../json/China.json";
 import japanFood from "../../json/Japan.json";
 import asianFood from "../../json/Asia.json";
-import FoodData from "../../json/food.json";
 // STYLED
 const DummyLoadFrame = styled.div`
   width: 100vw;
@@ -46,12 +45,12 @@ const ResultTitle = styled.div`
     text-align: center;
   }
   ~ button {
-    margin-top: 4rem;
+    margin-top: 2rem;
   }
 `;
 const RestaurantSection = styled.div`
   .point_txt {
-    padding: 1.5rem;
+    padding: 1.5rem 0;
     color: var(--bright-blue);
     li {
       margin-bottom: 0.8rem;
@@ -62,7 +61,6 @@ const RestaurantSection = styled.div`
   }
   .user_location {
     padding-bottom: 1rem;
-    box-shadow: 0px 10px 10px -10px rgba(0, 0, 0, 0.5);
   }
 `;
 const RestaurantList = styled.ul`
@@ -209,6 +207,33 @@ export const Result: React.FC = () => {
     return uniqueItems;
   };
 
+  function getDistanceFromLatLonInKm(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ): number {
+    const R = 6371;
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+
+    const a: number =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c: number = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance: number = R * c;
+
+    return distance;
+  }
+
+  function deg2rad(deg: number): number {
+    return deg * (Math.PI / 180);
+  }
+
   useEffect(() => {
     let totalPage = Math.ceil(
       data?.pages[0][0]?.head[0].list_total_count / 100
@@ -231,9 +256,11 @@ export const Result: React.FC = () => {
       ]);
     }
   }, [data]);
+
+  console.log("fullLocation", state);
   return (
     <>
-      {isDataLoad ? (
+      {!data ? (
         <DummyLoadFrame className="fixed flex flex_dir_c flex_jc_c flex_ai_c">
           <svg
             width="339"
@@ -267,7 +294,8 @@ export const Result: React.FC = () => {
           <div>열심히 식당 리스트를 선별하고 있습니다!</div>
         </DummyLoadFrame>
       ) : (
-        <div>
+        <div className="relative">
+          {/* <div className="user_location absolute">{level3}</div> */}
           {!state.option1 ? (
             <ResultTitle className="flex flex_dir_c flex_jc_c flex_ai_c">
               오늘 밥은 {FoodType.value}!<span>{FoodType.subText}</span>
@@ -303,13 +331,25 @@ export const Result: React.FC = () => {
                   식당 목록은 경기데이터드림의 안심식당정보 목록을 사용하고
                   있습니다.
                 </li>
-                <li>
-                  현재 중복 데이터 처리 후 Infinity Scroll 적용, 현재위치
-                  기준으로 반경 5km 이내 식당목록 적용 전 입니다.
-                </li>
               </ul>
-              <div className="user_location">
-                사용자의 위치 : <span>{level3}</span>
+              <div className="result_option flex flex_jc_sb flex_ai_c">
+                <div className="distance_option">
+                  <p>거리</p>
+                  <select name="" id="">
+                    <option value="">500m</option>
+                    <option value="">1km</option>
+                    <option value="">3km</option>
+                    <option value="">5km</option>
+                    <option value="">상관없음</option>
+                  </select>
+                </div>
+                <div className="custom_option">
+                  <p>전화가능 여부</p>
+                  <input type="radio" id="hasTel" name="tel" checked />
+                  <label htmlFor="hasTel">가능</label>
+                  <input type="radio" id="hasNetTel" name="tel" />
+                  <label htmlFor="hasNetTel">불가능</label>
+                </div>
               </div>
               <RestaurantList>
                 {storeList.map((store: any, index: number) => (
