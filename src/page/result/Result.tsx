@@ -1,5 +1,5 @@
 // MODULE
-import { useState, useEffect } from "react";
+import { useState, useEffect, SelectHTMLAttributes } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
@@ -63,28 +63,52 @@ const RestaurantSection = styled.div`
     padding-bottom: 1rem;
   }
   .result_option {
-    padding-bottom: 1rem;
-    .custom_option {
-      input {
-        opacity: 0;
-        ~ label {
+    > div {
+      flex-basis: 100%;
+      &.distance_option {
+        select {
+          width: 100%;
           padding: 0.5rem;
-          border-radius: 5px;
-          border: 1px solid var(--gray);
+          margin-top: 0.5rem;
+          font-size: 1.6rem;
+          option {
+            font-size: 1.5rem;
+          }
         }
-        &:checked {
-          ~ label {
-            background: var(--bright-blue);
-            border-color: var(--bright-blue);
-            color: var(--white);
+      }
+      &.custom_option {
+        margin-top: 1rem;
+        > div {
+          margin-top: 0.5rem;
+
+          > div {
+            flex-basis: 30%;
+            input {
+              opacity: 0;
+              z-index: -1;
+              ~ label {
+                padding: 0.5rem;
+                border-radius: 5px;
+                border: 1px solid var(--gray);
+                font-size: 1.5rem;
+              }
+              &:checked {
+                ~ label {
+                  background: var(--bright-blue);
+                  border-color: var(--bright-blue);
+                  color: var(--white);
+                }
+              }
+            }
           }
         }
       }
     }
+    padding-bottom: 1rem;
   }
 `;
 const RestaurantList = styled.ul`
-  max-height: 40vh;
+  max-height: 45vh;
   overflow: auto;
   li {
     padding: 0.8rem;
@@ -150,6 +174,7 @@ export const Result: React.FC = () => {
   const { level3, fullLocation }: any = userLocationStore();
   const [storeList, setStoreList] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [distance, setDistance] = useState<number>(100);
   const [hasTel, setHasTel] = useState<boolean>(false);
   const [ref, inView] = useInView();
   const handleRestart = () => {
@@ -163,11 +188,15 @@ export const Result: React.FC = () => {
   const RandomSelector: any = (data: any[]) => {
     return Math.floor(Math.random() * data.length);
   };
+  const handlerDistanceChange = (e: any) => {
+    setDistance(e.target.value);
+  };
   const {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
+    isFetching,
     data,
     ...result
   }: any = useInfiniteQuery({
@@ -274,8 +303,8 @@ export const Result: React.FC = () => {
       ]);
     }
   }, [data]);
-
-  console.log("fullLocation", state);
+  console.log(isLoading);
+  console.log(isFetching);
   return (
     <>
       {!data ? (
@@ -313,7 +342,6 @@ export const Result: React.FC = () => {
         </DummyLoadFrame>
       ) : (
         <div className="relative">
-          {/* <div className="user_location absolute">{level3}</div> */}
           {!state.option1 ? (
             <ResultTitle className="flex flex_dir_c flex_jc_c flex_ai_c">
               오늘 밥은 {FoodType.value}!<span>{FoodType.subText}</span>
@@ -340,41 +368,53 @@ export const Result: React.FC = () => {
 
           {state.option3 && FoodType.key !== "not" && (
             <RestaurantSection>
-              <ul className="point_txt">
-                <li>
-                  현재 사용자의 위치 기준으로 같은 시 기준으로 나온 식당
-                  목록입니다!
-                </li>
-                <li>
-                  식당 목록은 경기데이터드림의 안심식당정보 목록을 사용하고
-                  있습니다.
-                </li>
-              </ul>
-              <div className="result_option flex flex_jc_sb flex_ai_c">
-                {/* <div className="distance_option">
+              <ul className="point_txt"></ul>
+              <div className="result_option flex flex_jc_sb flex_ai_c flex_wrap_wrap">
+                <div className="distance_option">
                   <p>내 위치와의 거리</p>
-                  <select name="" id="">
-                    <option value="">500m</option>
-                    <option value="">1km</option>
-                    <option value="">3km</option>
-                    <option value="">5km</option>
-                    <option value="">상관없음</option>
+                  <select
+                    name="store_distance"
+                    id="store_distance"
+                    value={distance}
+                    onChange={handlerDistanceChange}
+                  >
+                    <option value={0.5}>500m</option>
+                    <option value={1}>1km</option>
+                    <option value={3}>3km</option>
+                    <option value={5}>5km</option>
+                    <option value={100}>상관없음</option>
                   </select>
-                </div> */}
+                </div>
                 <div className="custom_option">
-                  <p>전화번호가 없는 가게 표시여부</p>
+                  <p>전화불가능 가게 표시여부</p>
                   <div className="flex flex_jc_sb flex_ai_c">
                     <div>
-                      <input type="radio" id="hasTel" name="tel" checked />
-                      <label htmlFor="hasTel" onClick={() => setHasTel(false)}>
+                      <input
+                        type="radio"
+                        id="hasTel"
+                        name="tel"
+                        className="absolute"
+                        checked
+                      />
+                      <label
+                        htmlFor="hasTel"
+                        onClick={() => setHasTel(false)}
+                        className="flex flex_jc_c flex_ai_c"
+                      >
                         표시
                       </label>
                     </div>
                     <div>
-                      <input type="radio" id="hasNetTel" name="tel" />
+                      <input
+                        type="radio"
+                        id="hasNetTel"
+                        name="tel"
+                        className="absolute"
+                      />
                       <label
                         htmlFor="hasNetTel"
                         onClick={() => setHasTel(true)}
+                        className="flex flex_jc_c flex_ai_c"
                       >
                         숨기기
                       </label>
@@ -385,81 +425,90 @@ export const Result: React.FC = () => {
               <RestaurantList>
                 {storeList.map((store: any, index: number) => {
                   const telNum = store.TELNO === null;
+                  const calc_location = getDistanceFromLatLonInKm(
+                    state.lat,
+                    state.lon,
+                    Number(store.REFINE_WGS84_LAT),
+                    Number(store.REFINE_WGS84_LOGT)
+                  ).toFixed(1);
+                  const visual: boolean =
+                    Number(calc_location) < Number(distance);
                   return (
                     <>
-                      {hasTel ? (
-                        store.TELNO !== null && (
-                          <li
-                            key={index}
-                            ref={index === storeList.length - 1 ? ref : null}
-                          >
-                            <div className="store_name flex flex_ai_c">
-                              상호명 : {store?.BIZPLC_NM}
-                              <p>{store.INDUTYPE_DETAIL_NM}</p>
-                            </div>
-                            <div className="store_address">
-                              주소 :{" "}
-                              {store.REFINE_ROADNM_ADDR === null
-                                ? store.REFINE_LOTNO_ADDR
-                                : store.REFINE_ROADNM_ADDR}
-                              ,{store.DETAIL_ADDR}
-                            </div>
-                            <div className="tel">
-                              <a
-                                href={`tel:${store.TELNO}`}
-                                className="flex flex_jc_c flex_ai_c"
-                              >
-                                전화번호 : {store.TELNO}
-                              </a>
-                            </div>
-                            <div className="kakao_map_search">
-                              <Link
-                                to={`https://map.kakao.com/link/search/${store?.BIZPLC_NM}`}
-                                target="_blank"
-                                className="flex flex_jc_c flex_ai_c"
-                              >
-                                카카오맵으로 지도보기
-                              </Link>
-                            </div>
-                          </li>
-                        )
-                      ) : (
-                        <li
-                          key={index}
-                          ref={index === storeList.length - 1 ? ref : null}
-                        >
-                          <div className="store_name flex flex_ai_c">
-                            상호명 : {store?.BIZPLC_NM}
-                            <p>{store.INDUTYPE_DETAIL_NM}</p>
-                          </div>
-                          <div className="store_address">
-                            주소 :{" "}
-                            {store.REFINE_ROADNM_ADDR === null
-                              ? store.REFINE_LOTNO_ADDR
-                              : store.REFINE_ROADNM_ADDR}
-                            ,{store.DETAIL_ADDR}
-                          </div>
-                          {!telNum && (
-                            <div className="tel">
-                              <a
-                                href={`tel:${store.TELNO}`}
-                                className="flex flex_jc_c flex_ai_c"
-                              >
-                                전화번호 : {store.TELNO}
-                              </a>
-                            </div>
-                          )}
-                          <div className="kakao_map_search">
-                            <Link
-                              to={`https://map.kakao.com/link/search/${store?.BIZPLC_NM}`}
-                              target="_blank"
-                              className="flex flex_jc_c flex_ai_c"
+                      {hasTel
+                        ? store.TELNO !== null &&
+                          visual && (
+                            <li
+                              key={index}
+                              ref={index === storeList.length - 1 ? ref : null}
                             >
-                              카카오맵으로 지도보기
-                            </Link>
-                          </div>
-                        </li>
-                      )}
+                              <div className="store_name flex flex_ai_c">
+                                {store?.BIZPLC_NM}
+                                <p>{store.INDUTYPE_DETAIL_NM}</p>
+                              </div>
+                              <div className="store_address">
+                                {store.REFINE_ROADNM_ADDR === null
+                                  ? store.REFINE_LOTNO_ADDR
+                                  : store.REFINE_ROADNM_ADDR}
+                                ,{store.DETAIL_ADDR}
+                              </div>
+                              <div>{calc_location}km</div>
+                              <div className="tel">
+                                <a
+                                  href={`tel:${store.TELNO}`}
+                                  className="flex flex_jc_c flex_ai_c"
+                                >
+                                  전화번호 : {store.TELNO}
+                                </a>
+                              </div>
+                              <div className="kakao_map_search">
+                                <Link
+                                  to={`https://map.kakao.com/link/search/${store?.BIZPLC_NM}`}
+                                  target="_blank"
+                                  className="flex flex_jc_c flex_ai_c"
+                                >
+                                  카카오맵으로 지도보기
+                                </Link>
+                              </div>
+                            </li>
+                          )
+                        : visual && (
+                            <li
+                              key={index}
+                              ref={index === storeList.length - 1 ? ref : null}
+                            >
+                              <div className="store_name flex flex_ai_c">
+                                {store?.BIZPLC_NM}
+                                <p>{store.INDUTYPE_DETAIL_NM}</p>
+                              </div>
+                              <div className="store_address">
+                                {store.REFINE_ROADNM_ADDR === null
+                                  ? store.REFINE_LOTNO_ADDR
+                                  : store.REFINE_ROADNM_ADDR}
+                                ,{store.DETAIL_ADDR}
+                              </div>
+                              <div>{calc_location}km</div>
+                              {!telNum && (
+                                <div className="tel">
+                                  <a
+                                    href={`tel:${store.TELNO}`}
+                                    className="flex flex_jc_c flex_ai_c"
+                                  >
+                                    전화번호 : {store.TELNO}
+                                  </a>
+                                </div>
+                              )}
+                              <div className="kakao_map_search">
+                                <Link
+                                  to={`https://map.kakao.com/link/search/${store?.BIZPLC_NM}`}
+                                  target="_blank"
+                                  className="flex flex_jc_c flex_ai_c"
+                                >
+                                  카카오맵으로 지도보기
+                                </Link>
+                              </div>
+                            </li>
+                          )}
                     </>
                   );
                 })}

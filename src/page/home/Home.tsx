@@ -172,7 +172,8 @@ export const Home: React.FC = () => {
             ※ 사용자의 실시간 위치기반 사용동의가 필요합니다.
           </div>
           <div className="alert_message">
-            ※ 현재 반경 5km 이내의 식당만 받아올 수 있게 수정중 입니다.
+            ※ 식당 목록은 경기데이터드림의 안심식당정보 목록을 사용하고
+            있습니다.
           </div>
           <div className="flex flex_dir_c flex_jc_sb flex_ai_c">
             <RadioButton className="flex flex_jc_c flex_ai_c">

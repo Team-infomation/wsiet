@@ -69,7 +69,9 @@ export const ModalSection: React.FC = () => {
         </div>
         <ul>
           <li>선택장애있는 제가 도저히 고를 자신이 없어 만들었습니다.</li>
-          <li>음식선별 기준은 지극히 개인적으로 선별하였습니다.</li>
+          <li>
+            결과값에 대한 음식선별 기준은 지극히 개인적으로 선별하였습니다.
+          </li>
           <li>
             위치 기반의 경우 geolocation을 통하여 사용자의 위도·경도값을 받아온
             후 V-WORLD 디지털트윈국토 의{" "}
@@ -93,8 +95,6 @@ export const ModalSection: React.FC = () => {
             </Link>
             ) 의 안심식당 정보 API를 사용하였습니다.
           </li>
-          <li>추후 전국단위의 공공데이터 활용 예정입니다.</li>
-          {/* <li>카카오맵 API를 사용하고싶었지만 일정횟수 이상은 유료인지라...</li> */}
         </ul>
         <div className="modal_tit flex flex_jc_c flex_ai_c">
           이런거 왜 만들었는지 따지러 가기
