@@ -302,12 +302,11 @@ export const Result: React.FC = () => {
         ),
       ]);
     }
-  }, [data]);
-  console.log(isLoading);
-  console.log(isFetching);
+  }, [data, isLoading]);
+
   return (
     <>
-      {!data ? (
+      {!data && isFetching ? (
         <DummyLoadFrame className="fixed flex flex_dir_c flex_jc_c flex_ai_c">
           <svg
             width="339"
@@ -394,7 +393,7 @@ export const Result: React.FC = () => {
                         id="hasTel"
                         name="tel"
                         className="absolute"
-                        checked
+                        defaultChecked
                       />
                       <label
                         htmlFor="hasTel"
